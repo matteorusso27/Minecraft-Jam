@@ -7,38 +7,35 @@ public class Raycaster : MonoBehaviour
     public Camera cam;
     int x = (Screen.width / 2);
     int y = (Screen.height / 2);
+    [SerializeField]
     float maxDistanceHit = 5f;
-    float minDistanceHit = 1.5f;
+    [SerializeField]
+    float minDistanceHit = 1f;
 
     [SerializeField] GameObject cube;
-    enum Axis
-    {
-        X,
-        Y,
-        Z
-    }
-
-    private void Start()
-    {
-        
-    }
-
+    
+    private bool isDestroying;
     private void Update()
     {
+        bool isLeftClick = Input.GetMouseButtonDown(0);
+        bool isRightClick = Input.GetMouseButtonDown(1);
         //tasto destro del mouse per creare
-        if (Input.GetMouseButtonDown(0)) 
+        if (isLeftClick) 
         {
-            RaycastHit hit;
-            castRay(out hit);
-            CreateBlock(ref hit);
+            CreateBlock();
         }
-        else if (Input.GetMouseButtonDown(1))
+        else if (isRightClick || isDestroying)
         {
-            RaycastHit hit;
-            castRay(out hit);
-            DamageBlock(ref hit);
+            isDestroying = true;
+            DamageBlock();
 
         }
+        if(isDestroying)
+        {
+            DamageBlock();
+        }
+        if (!isRightClick) isDestroying = false;
+        Debug.Log(isDestroying);
     }
 
     
@@ -53,8 +50,10 @@ public class Raycaster : MonoBehaviour
         }   
     }
 
-    private void CreateBlock(ref RaycastHit hit)
+    private void CreateBlock()
     {
+        RaycastHit hit;
+        castRay(out hit);
         //Possibility to create blocks at certain distance
         if (hit.distance > minDistanceHit)
         {
@@ -77,8 +76,13 @@ public class Raycaster : MonoBehaviour
         }
     }
 
-    private void DamageBlock(ref RaycastHit hit)
+    private void DamageBlock()
     {
-        Destroy(hit.collider.gameObject);
+        RaycastHit hit;
+        castRay(out hit);
+        GameObject go = hit.collider.gameObject;
+
+        go.GetComponent<BlockScript>().DoDamage();
+        Debug.Log("health: "+ go.GetComponent<BlockScript>().health);
     }
 }
