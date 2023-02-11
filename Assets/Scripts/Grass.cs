@@ -8,11 +8,14 @@ public class Grass : BlockScript
     {
         maxHealth = 35;
         health = maxHealth;
+        dropTag = "GrassDrop";
     }
 
     protected override void SpawnDrop()
     {
         base.SpawnDrop();
         cubedrop.GetComponent<Renderer>().material.color = Color.green;
+        cubedrop.gameObject.name = dropTag;
+        cubedrop.gameObject.tag = dropTag;
     }
 }

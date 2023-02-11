@@ -9,7 +9,7 @@ public class BlockScript : MonoBehaviour
 
     //Block drop variables
     protected GameObject cubedrop;
-    protected readonly string dropTag = "Drop"; 
+    protected string dropTag = "Drop"; 
     protected Coroutine DropAnimationCoRoutine;
     protected float offsetAnimation = 0.2f;
     protected static Vector3 scaleChangeNewCube = new Vector3(0.2f, 0.2f, 0.2f);
@@ -69,8 +69,6 @@ public class BlockScript : MonoBehaviour
         float posZ = gameObject.transform.position.z;
         cubedrop = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube),
                                 new Vector3(posX, posY, posZ), Quaternion.identity);
-        cubedrop.gameObject.name = dropTag;
-        cubedrop.gameObject.tag = dropTag;
         transform.SetParent(cubedrop.transform);
         cubedrop.transform.localScale = scaleChangeNewCube;
         cubedrop.GetComponent<BoxCollider>().isTrigger = true;

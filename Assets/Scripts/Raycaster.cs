@@ -13,7 +13,6 @@ public class Raycaster : MonoBehaviour
     float minDistanceHit = 1f;
 
     [SerializeField] GameObject cube;
-    
     private void Update()
     {
         bool isLeftClick = Input.GetMouseButtonDown(0);
@@ -22,6 +21,7 @@ public class Raycaster : MonoBehaviour
         if (isLeftClick) 
         {
             CreateBlock();
+            
         }
         else if (isRightClick)
         {
@@ -37,8 +37,6 @@ public class Raycaster : MonoBehaviour
         if (Physics.Raycast(lastRay, out hit, maxDistanceHit))
         {
             Vector3 hitPoint = hit.point;
-            Debug.Log("Posizione hit: " + hitPoint);
-            Debug.Log("Normale: " + hit.normal);
         }   
     }
 
@@ -55,6 +53,7 @@ public class Raycaster : MonoBehaviour
 
             if (hit.normal.x != 0)
             {
+                
                 Instantiate(cube, new Vector3(hit.normal.x + posX, posY, posZ), Quaternion.identity);
             }
             else if (hit.normal.y != 0)
