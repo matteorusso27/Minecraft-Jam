@@ -47,7 +47,7 @@ public class Raycaster : MonoBehaviour
         RaycastHit hit;
         castRay(out hit);
         //Possibility to create blocks at certain distance
-        if (hit.distance > minDistanceHit)
+        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag("Block"))
         {
             float posX = hit.collider.gameObject.transform.position.x;
             float posY = hit.collider.gameObject.transform.position.y;
@@ -72,9 +72,12 @@ public class Raycaster : MonoBehaviour
     {
         RaycastHit hit;
         castRay(out hit);
-        GameObject go = hit.collider.gameObject;
+        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag("Block"))
+        {
+            GameObject go = hit.collider.gameObject;
 
-        go.GetComponent<BlockScript>().GetDamage();
-        Debug.Log("health: "+ go.GetComponent<BlockScript>().health);
+            go.GetComponent<BlockScript>().GetDamage();
+            Debug.Log("health: " + go.GetComponent<BlockScript>().health);
+        }
     }
 }

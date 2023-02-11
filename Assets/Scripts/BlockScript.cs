@@ -4,29 +4,28 @@ using UnityEngine;
 
 public class BlockScript : MonoBehaviour
 {
-    [SerializeField]
-    public int maxHealth = 1000;
-    public int health = 1000;
+    protected int maxHealth;
+    public int health; //levare il public, è solo per debug
 
-    public Texture2D tex;
-    //Block drop animation
-    private GameObject cubedrop;
+    //Block drop variables
+    protected GameObject cubedrop;
+    protected readonly string dropTag = "Drop"; 
     protected Coroutine DropAnimationCoRoutine;
-    private float offsetAnimation = 0.2f;
-    private static Vector3 scaleChangeNewCube = new Vector3(0.2f, 0.2f, 0.2f);
-    private float dropUpwardsSpeed = 0.25f;
-    private float dropRotationSpeed = 15f;
+    protected float offsetAnimation = 0.2f;
+    protected static Vector3 scaleChangeNewCube = new Vector3(0.2f, 0.2f, 0.2f);
+    protected float dropUpwardsSpeed = 0.25f;
+    protected float dropRotationSpeed = 15f;
+
     public void GetDamage()
     {
-        Color alpha = GetComponent<Renderer>().material.color;
         health--;
         if (health == 0) DropAndDestroy();
-        if (health == maxHealth * (3 / 4)) GetComponent<Renderer>().material.color = Color.black;
-        if (health == maxHealth * (1 / 2)) GetComponent<Renderer>().material.color = Color.white;
-        if (health == maxHealth * (1 / 4)) GetComponent<Renderer>().material.color = Color.red;
+        if (health <= maxHealth * (3 / 4)) GetComponent<Renderer>().material.color = Color.blue;
+        if (health <= maxHealth * (1 / 2)) GetComponent<Renderer>().material.color = Color.grey;
+        if (health <= maxHealth * (1 / 4)) GetComponent<Renderer>().material.color = Color.red;
     }
 
-    public virtual IEnumerator DropMovement(GameObject cubedrop)
+    protected IEnumerator DropMovement(GameObject cubedrop)
     {
         Vector3 startPoint = cubedrop.transform.position;
         Vector3 endPoint = cubedrop.transform.position;
@@ -46,30 +45,35 @@ public class BlockScript : MonoBehaviour
             {
                 currentTarget = endPoint;
             }
+      
             cubedrop.transform.Rotate(Vector3.up * dropRotationSpeed * Time.deltaTime, Space.Self);
             yield return null;
         }
     }
 
-    private void DropAndDestroy()
+    protected void DropAndDestroy()
     {
         HideBlock();
+        SpawnDrop();
+    }
+    protected void HideBlock()
+    {
+        GetComponent<Renderer>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+    }
+
+    protected virtual void SpawnDrop()
+    {
         float posX = gameObject.transform.position.x;
         float posY = gameObject.transform.position.y;
         float posZ = gameObject.transform.position.z;
-        cubedrop = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), 
+        cubedrop = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube),
                                 new Vector3(posX, posY, posZ), Quaternion.identity);
+        cubedrop.gameObject.name = dropTag;
+        cubedrop.gameObject.tag = dropTag;
+        transform.SetParent(cubedrop.transform);
         cubedrop.transform.localScale = scaleChangeNewCube;
+        cubedrop.GetComponent<BoxCollider>().isTrigger = true;
         DropAnimationCoRoutine = StartCoroutine((DropMovement(cubedrop)));
-    }
-    private void HideBlock()
-    {
-        GetComponent<Renderer>().enabled = false;
-        GetComponent<BoxCollider>().isTrigger = true;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        GetComponent<BoxCollider>().enabled = false;
-        Destroy(cubedrop);
     }
 }
