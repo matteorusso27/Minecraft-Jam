@@ -14,28 +14,20 @@ public class Raycaster : MonoBehaviour
 
     [SerializeField] GameObject cube;
     
-    private bool isDestroying;
     private void Update()
     {
         bool isLeftClick = Input.GetMouseButtonDown(0);
-        bool isRightClick = Input.GetMouseButtonDown(1);
+        bool isRightClick = Input.GetMouseButton(1);
         //tasto destro del mouse per creare
         if (isLeftClick) 
         {
             CreateBlock();
         }
-        else if (isRightClick || isDestroying)
+        else if (isRightClick)
         {
-            isDestroying = true;
             DamageBlock();
 
         }
-        if(isDestroying)
-        {
-            DamageBlock();
-        }
-        if (!isRightClick) isDestroying = false;
-        Debug.Log(isDestroying);
     }
 
     
@@ -82,7 +74,7 @@ public class Raycaster : MonoBehaviour
         castRay(out hit);
         GameObject go = hit.collider.gameObject;
 
-        go.GetComponent<BlockScript>().DoDamage();
+        go.GetComponent<BlockScript>().GetDamage();
         Debug.Log("health: "+ go.GetComponent<BlockScript>().health);
     }
 }
