@@ -9,6 +9,7 @@ TagManager:
   - CobbleStoneDrop
   - WoodDrop
   - GrassDrop
+  - LowBar
   layers:
   - Default
   - TransparentFX

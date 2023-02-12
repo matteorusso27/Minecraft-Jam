@@ -12,7 +12,21 @@ public class Raycaster : MonoBehaviour
     [SerializeField]
     float minDistanceHit = 1f;
 
-    [SerializeField] GameObject cube;
+    private UpdateLowBar lowBarScript;
+
+    [SerializeField] GameObject grassPrefab;
+    [SerializeField] GameObject cobbleStonePrefab;
+    [SerializeField] GameObject woodPrefab;
+
+    private void Awake()
+    {
+        UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
+        if(script) lowBarScript = script;
+        else
+        {
+            Debug.Log("Not found reference");
+        }
+    }
     private void Update()
     {
         bool isLeftClick = Input.GetMouseButtonDown(0);
@@ -51,19 +65,28 @@ public class Raycaster : MonoBehaviour
             float posY = hit.collider.gameObject.transform.position.y;
             float posZ = hit.collider.gameObject.transform.position.z;
 
-            if (hit.normal.x != 0)
+            GameObject prefab;
+            prefabToBuild(out prefab);
+            if (prefab)
             {
-                
-                Instantiate(cube, new Vector3(hit.normal.x + posX, posY, posZ), Quaternion.identity);
-            }
-            else if (hit.normal.y != 0)
-            {
-                Instantiate(cube, new Vector3(posX, posY + hit.normal.y, posZ), Quaternion.identity);
+                if (hit.normal.x != 0)
+                {
+                    Instantiate(prefab, new Vector3(hit.normal.x + posX, posY, posZ), Quaternion.identity);
+                }
+                else if (hit.normal.y != 0)
+                {
+                    Instantiate(prefab, new Vector3(posX, posY + hit.normal.y, posZ), Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(prefab, new Vector3(posX, posY, posZ + hit.normal.z), Quaternion.identity);
+                }
             }
             else
             {
-                Instantiate(cube, new Vector3(posX, posY, posZ + hit.normal.z), Quaternion.identity);
+                Debug.Log("Prefab not instantiated");
             }
+            
         }
     }
 
@@ -71,12 +94,31 @@ public class Raycaster : MonoBehaviour
     {
         RaycastHit hit;
         castRay(out hit);
-        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag("Block"))
+        if (hit.collider.gameObject.CompareTag("Block"))
         {
             GameObject go = hit.collider.gameObject;
 
             go.GetComponent<BlockScript>().GetDamage();
             Debug.Log("health: " + go.GetComponent<BlockScript>().health);
+        }
+    }
+    private void prefabToBuild(out GameObject gObject)
+    {
+        string activeTex = lowBarScript.FindHighlightBlock();
+        switch (activeTex)
+        {
+            case "CobbleStoneBlockIcon":
+                gObject = cobbleStonePrefab;
+                return;
+            case "WoodBlockIcon":
+                gObject = woodPrefab;
+                return;
+            case "GrassBlockIcon":
+                gObject = grassPrefab;
+                return;
+            default:
+                gObject = null;
+                break;
         }
     }
 }

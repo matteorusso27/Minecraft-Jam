@@ -6,7 +6,7 @@ public class CobbleStone : BlockScript
 {
     private void Awake()
     {
-        maxHealth = 50;
+        maxHealth = 250;
         health = maxHealth;
         dropTag = "CobbleStoneDrop";
     }
