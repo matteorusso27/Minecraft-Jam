@@ -12,6 +12,10 @@ TagManager:
   - LowBar
   - LimitBlock
   - CraftManager
+  - UI
+  - Grid
+  - Left_Crafting_Slot
+  - Right_Crafting_Slot
   layers:
   - Default
   - TransparentFX
