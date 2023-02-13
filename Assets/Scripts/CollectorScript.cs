@@ -18,15 +18,15 @@ public class CollectorScript : MonoBehaviour
         {
             case "CobbleStoneDrop":
                 HandleDrop(other.gameObject);
-                UpdateValues("CobbleStoneDrop");
+                AddItem("CobbleStoneDrop");
                 break;
             case "WoodDrop":
                 HandleDrop(other.gameObject);
-                UpdateValues("WoodDrop");
+                AddItem("WoodDrop");
                 break;
             case "GrassDrop":
                 HandleDrop(other.gameObject);
-                UpdateValues("GrassDrop");
+                AddItem("GrassDrop");
                 break;
             default:
                 break;
@@ -40,7 +40,7 @@ public class CollectorScript : MonoBehaviour
         Destroy(drop.gameObject);
     }
 
-    private void UpdateValues(string dropType)
+    private void AddItem(string dropType)
     {
         storedBlocks[dropType] += 1;
         foreach (KeyValuePair<string, int> item in storedBlocks)
