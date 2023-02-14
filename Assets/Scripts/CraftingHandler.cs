@@ -20,13 +20,14 @@ public class CraftingHandler : MonoBehaviour
     [SerializeField] private Texture2D cobbleStoneTexture;
     [SerializeField] private Texture2D woodTexture;
     [SerializeField] private Texture2D uiTexture;
+    [SerializeField] private Texture2D pikeTexture;
 
     private bool isGrassActive;
     private bool isWoodActive;
     private bool isCobbleStoneActive;
 
     private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
-    private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
+    private static List<string> recipe2 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
 
     void Start()
     {
@@ -81,7 +82,7 @@ public class CraftingHandler : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("isrecipe: "+CheckRecipe());
+            CheckRecipe();
             
         }
     }
@@ -170,24 +171,38 @@ public class CraftingHandler : MonoBehaviour
     }
 
 
-    private bool CheckRecipe()
+    private void CheckRecipe()
     {
         List<string> input_recipe = new List<string>();
-        for(int i = 0; i < right_slots.Length; i++)
+        for (int i = 0; i < right_slots.Length; i++)
         {
             if (right_slots[i].transform.childCount > 0)
             {
                 string tex = right_slots[i].transform.GetChild(0).gameObject.GetComponent<RawImage>().texture.name;
                 input_recipe.Add(ConvertTextureToDrop(tex));
             }
-            
+
         }
-        //check if the two lists are equal
-        if(input_recipe.OrderBy(i => i).SequenceEqual(recipe1.OrderBy(i => i)))
+        //check if the provided materials form a recipe
+        if (input_recipe.OrderBy(i => i).SequenceEqual(recipe1.OrderBy(i => i)))
         {
             //create recipe1
+            if (result_slot.transform.childCount > 0)
+            {
+                RawImage rawImgSon = result_slot.transform.GetChild(0).GetComponent<RawImage>();
+                if (rawImgSon.texture == null)
+                {
+                    rawImgSon.texture = pikeTexture;
+                    Color sonColor = rawImgSon.color;
+                    sonColor.a = 1f;
+                    rawImgSon.color = sonColor;
+                    //inventory.AddNewItem("Pike");
+                }
+            }
+
+
         }
-       
+
     }
 
     //Da mettere in una classe statica
