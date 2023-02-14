@@ -17,6 +17,8 @@ TagManager:
   - Left_Crafting_Slot
   - Right_Crafting_Slot
   - ResultCrafting_Slot
+  - Background_Craft
+  - CraftingPanel
   layers:
   - Default
   - TransparentFX
