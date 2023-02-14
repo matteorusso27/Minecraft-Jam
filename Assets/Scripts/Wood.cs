@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Wood : BlockScript
 {
+    public Material[] crackMaterials;
     private void Awake()
     {
-        maxHealth = 50;
-        health = maxHealth;
+        maxHealth = 50f;
+        currentHealth = maxHealth;
         dropTag = "WoodDrop";
+        materials = crackMaterials;
     }
 
     protected override void SpawnDrop()

@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class BlockScript : MonoBehaviour
 {
-    protected int maxHealth;
-    public int health; //levare il public, è solo per debug
+    protected float maxHealth;
+    public float currentHealth; //levare il public, è solo per debug
 
+    private int handDamage = 12;
+    private int pikeDamage = 30;
     //Block drop variables
     protected GameObject cubedrop;
     protected string dropTag = "Drop"; 
@@ -16,13 +18,20 @@ public class BlockScript : MonoBehaviour
     protected float dropUpwardsSpeed = 0.25f;
     protected float dropRotationSpeed = 15f;
 
-    public void GetDamage()
+    protected Material[] materials;
+
+    public void TakeDamage(bool isPikeActive)
     {
-        health--;
-        if (health == 0) DropAndDestroy();
-        if (health <= maxHealth * (3 / 4)) GetComponent<Renderer>().material.color = Color.blue;
-        if (health <= maxHealth * (1 / 2)) GetComponent<Renderer>().material.color = Color.grey;
-        if (health <= maxHealth * (1 / 4)) GetComponent<Renderer>().material.color = Color.red;
+        if (isPikeActive)
+        {
+            currentHealth -= pikeDamage * Time.deltaTime; //damage per second
+        }
+        else
+        {
+            currentHealth -= handDamage * Time.deltaTime; //damage per second
+        }
+        if (currentHealth < 0) DropAndDestroy();
+        ChangeMaterial();
     }
 
     protected IEnumerator DropMovement(GameObject cubedrop)
@@ -74,4 +83,15 @@ public class BlockScript : MonoBehaviour
         cubedrop.GetComponent<BoxCollider>().isTrigger = true;
         DropAnimationCoRoutine = StartCoroutine((DropMovement(cubedrop)));
     }
+    
+    
+    protected void ChangeMaterial()
+    {
+        float healthLevel = currentHealth / maxHealth;
+        if (healthLevel < 0.7f) GetComponent<Renderer>().material = materials[0];
+        if (healthLevel < 0.4f) GetComponent<Renderer>().material = materials[1];
+        if (healthLevel < 0.25f) GetComponent<Renderer>().material = materials[2];
+    }
+    
+
 }

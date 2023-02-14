@@ -17,10 +17,12 @@ public class UpdateLowBar : MonoBehaviour
     [SerializeField] private Texture2D cobbleStoneTexture;
     [SerializeField] private Texture2D woodTexture;
     [SerializeField] private Texture2D blankTexture;
+    [SerializeField] private Texture2D pikeTexture;
 
     private bool isGrassTexture;
     private bool isCobbleStoneTexture;
     private bool isWoodTexture;
+    private bool isPikeTexture;
 
     private void Start()
     {
@@ -104,6 +106,13 @@ public class UpdateLowBar : MonoBehaviour
                             isGrassTexture = true;
                         }
                         break;
+                    case "Pike":
+                        if (!isPikeTexture)
+                        {
+                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = pikeTexture;
+                            isPikeTexture = true;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -135,6 +144,14 @@ public class UpdateLowBar : MonoBehaviour
                             isGrassTexture = !isGrassTexture;
                         }
                             
+                        break;
+                    case "Pike":
+                        if (isPikeTexture)
+                        {
+                            slots[FindSlot("Pike")].GetComponent<RawImage>().texture = blankTexture;
+                            isPikeTexture = !isPikeTexture;
+                        }
+
                         break;
                     default:
                         break;
@@ -176,7 +193,7 @@ public class UpdateLowBar : MonoBehaviour
                 string dropType = ConvertTextureToDrop(textName);
                 if (inventory.GetQuantity(dropType) > 0)
                 {
-                    inventory.RemoveItem(dropType);
+                    inventory.DecrementItem(dropType);
                     return textName;
                 }
                     
@@ -247,5 +264,26 @@ public class UpdateLowBar : MonoBehaviour
             if (isTextureBlank(slots[i]))
                 texts[i].GetComponent<Text>().text = string.Empty;
         }
+    }
+
+    public bool isPikeActive()
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (i == currentHighlightIndex)
+            {
+                string textName = slots[i].GetComponent<RawImage>().texture.name;
+                if (textName != "Pike")
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        //unreachable
+        return false;
     }
 }

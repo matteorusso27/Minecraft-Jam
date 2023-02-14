@@ -20,6 +20,8 @@ public class Raycaster : MonoBehaviour
 
     public bool isGamePaused;
 
+    private bool isPikeActive;
+
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
@@ -33,7 +35,9 @@ public class Raycaster : MonoBehaviour
     {
         bool isLeftClick = Input.GetMouseButtonDown(0);
         bool isRightClick = Input.GetMouseButton(1);
+        
         isGamePaused = GameObject.FindGameObjectWithTag("CraftManager").GetComponent<CraftingHandler>().isGamePaused();
+        isPikeActive = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>().isPikeActive();
         //tasto destro del mouse per creare
         if (!isGamePaused)
         {
@@ -74,7 +78,7 @@ public class Raycaster : MonoBehaviour
 
             GameObject prefab;
             prefabToBuild(out prefab);
-            if (prefab)
+            if (prefab && prefab.tag == "Block") // I don't want to build if I handle the pike
             {
                 if (hit.normal.x != 0)
                 {
@@ -101,12 +105,12 @@ public class Raycaster : MonoBehaviour
     {
         RaycastHit hit;
         castRay(out hit);
-        if (hit.collider.gameObject.CompareTag("Block"))
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("Block"))
         {
             GameObject go = hit.collider.gameObject;
+            go.GetComponent<BlockScript>().TakeDamage(isPikeActive);
 
-            go.GetComponent<BlockScript>().GetDamage();
-            Debug.Log("health: " + go.GetComponent<BlockScript>().health);
+            Debug.Log("health: " + go.GetComponent<BlockScript>().currentHealth);
         }
     }
     private void prefabToBuild(out GameObject gObject)

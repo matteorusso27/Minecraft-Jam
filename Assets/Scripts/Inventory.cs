@@ -11,14 +11,15 @@ public class Inventory
         storedBlocks.Add("GrassDrop", 0);
         storedBlocks.Add("CobbleStoneDrop", 0);
         storedBlocks.Add("WoodDrop", 0);
+        storedBlocks.Add("Pike", 0);
     }
 
-    public void AddItem(string DropType)
+    public void IncrementItem(string DropType)
     {
         storedBlocks[DropType] += 1;
     }
 
-    public void RemoveItem(string DropType)
+    public void DecrementItem(string DropType)
     {
         storedBlocks[DropType] -= 1;
     }

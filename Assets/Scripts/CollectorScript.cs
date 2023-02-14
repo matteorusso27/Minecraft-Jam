@@ -15,15 +15,15 @@ public class CollectorScript : MonoBehaviour
         {
             case "CobbleStoneDrop":
                 HandleDrop(other.gameObject);
-                inventory.AddItem("CobbleStoneDrop");
+                inventory.IncrementItem("CobbleStoneDrop");
                 break;
             case "WoodDrop":
                 HandleDrop(other.gameObject);
-                inventory.AddItem("WoodDrop");
+                inventory.IncrementItem("WoodDrop");
                 break;
             case "GrassDrop":
                 HandleDrop(other.gameObject);
-                inventory.AddItem("GrassDrop");
+                inventory.IncrementItem("GrassDrop");
                 break;
             default:
                 break;

@@ -15,6 +15,7 @@ public class CraftingHandler : MonoBehaviour
     private GameObject pnlCrafting;
     [SerializeField] private GameObject pnlCraftingReference;
     [SerializeField] private GameObject pnlCraftingPrefab;
+    private Text helpText;
     private bool isPaused;
     [SerializeField] private Texture2D grassTexture;
     [SerializeField] private Texture2D cobbleStoneTexture;
@@ -38,9 +39,14 @@ public class CraftingHandler : MonoBehaviour
     {
         pnlCrafting = GameObject.FindGameObjectWithTag("CraftingPanel");
         if (pnlCrafting == null)
+        {
+            pnlCraftingReference.SetActive(true);
             pnlCrafting = pnlCraftingReference;
+        } 
+        //pnlCrafting = pnlCraftingReference;
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<CollectorScript>().inventory;
         result_slot = GameObject.FindGameObjectWithTag("ResultCrafting_Slot");
+        helpText = GameObject.Find("HelpText").GetComponent<Text>();
 
         left_slots = new GameObject[dimension + dimension];
         right_slots = new GameObject[dimension];
@@ -58,7 +64,7 @@ public class CraftingHandler : MonoBehaviour
         isGrassActive = false;
         isWoodActive = false;
         isCobbleStoneActive = false;
-        pnlCrafting.SetActive(isPaused);
+        pnlCrafting.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -196,11 +202,18 @@ public class CraftingHandler : MonoBehaviour
                     Color sonColor = rawImgSon.color;
                     sonColor.a = 1f;
                     rawImgSon.color = sonColor;
-                    //inventory.AddNewItem("Pike");
+                    helpText.text = "That's how it's done! You got a Pike! The UI will now close to let you play";
+                    inventory.IncrementItem("Pike");
+                    StartCoroutine(CloseUI());
+                    //StartCoroutine(MyCoroutine());
+                    
                 }
             }
 
-
+        }
+        else
+        {
+            helpText.text = "Not a correct combination... Try another recipe and press R";
         }
 
     }
@@ -246,5 +259,19 @@ public class CraftingHandler : MonoBehaviour
     public bool isGamePaused()
     {
         return isPaused;
+    }
+
+    IEnumerator CloseUI()
+    {
+        
+            Debug.Log("Coroutine started");
+            pnlCrafting.GetComponent<Image>().raycastTarget = false;
+            Time.timeScale = 1;
+        yield return new WaitForSeconds(4f);
+
+        ChangePauseStatus();
+        Debug.Log("Disabling");
+        DestroyAndCreate();
+        yield return null;
     }
 }

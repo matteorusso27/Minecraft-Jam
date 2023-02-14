@@ -110,5 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecdc6c2c5a39b4543a9cebc00e6ebd61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 0
-  health: 0
+  currentHealth: 0
+  crackMaterials:
+  - {fileID: 2100000, guid: e4f90a7170049e148a75ce40888df026, type: 2}
+  - {fileID: 2100000, guid: ab9aca88cf33e20449717e3ee9f4d19e, type: 2}
+  - {fileID: 2100000, guid: 2def9fe5afd896742bcdbab6484fa86b, type: 2}

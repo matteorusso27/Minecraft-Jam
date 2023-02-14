@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Grass : BlockScript
 {
+    public Material[] crackMaterials;
     private void Awake()
     {
-        maxHealth = 35;
-        health = maxHealth;
+        maxHealth = 35f;
+        currentHealth = maxHealth;
         dropTag = "GrassDrop";
+        materials = crackMaterials;
     }
 
     protected override void SpawnDrop()
