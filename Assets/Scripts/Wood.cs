@@ -6,7 +6,7 @@ public class Wood : BlockScript
 {
     private void Awake()
     {
-        maxHealth = 100;
+        maxHealth = 50;
         health = maxHealth;
         dropTag = "WoodDrop";
     }

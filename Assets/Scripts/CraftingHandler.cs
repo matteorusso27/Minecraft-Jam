@@ -12,10 +12,10 @@ public class CraftingHandler : MonoBehaviour
     private int dimension = 3;
     private Inventory inventory;
 
-
-    private bool isPaused;
     private GameObject pnlCrafting;
-
+    [SerializeField] private GameObject pnlCraftingReference;
+    [SerializeField] private GameObject pnlCraftingPrefab;
+    private bool isPaused;
     [SerializeField] private Texture2D grassTexture;
     [SerializeField] private Texture2D cobbleStoneTexture;
     [SerializeField] private Texture2D woodTexture;
@@ -26,13 +26,20 @@ public class CraftingHandler : MonoBehaviour
     private bool isCobbleStoneActive;
 
     private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
+    private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
 
     void Start()
     {
-        pnlCrafting = GameObject.Find("CraftingPanel");
+        SetInitialState();
+    }
+
+    private void SetInitialState()
+    {
+        pnlCrafting = GameObject.FindGameObjectWithTag("CraftingPanel");
+        if (pnlCrafting == null)
+            pnlCrafting = pnlCraftingReference;
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<CollectorScript>().inventory;
         result_slot = GameObject.FindGameObjectWithTag("ResultCrafting_Slot");
-
 
         left_slots = new GameObject[dimension + dimension];
         right_slots = new GameObject[dimension];
@@ -47,15 +54,18 @@ public class CraftingHandler : MonoBehaviour
         }
 
         isPaused = false;
+        isGrassActive = false;
+        isWoodActive = false;
+        isCobbleStoneActive = false;
         pnlCrafting.SetActive(isPaused);
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && !isPaused)
         {
             //Clear slots
-            ClearSlots();
+            //ClearSlots();
 
             //Change game pause state
             ChangePauseStatus();
@@ -63,11 +73,35 @@ public class CraftingHandler : MonoBehaviour
             //Fill the left slots with the inventory items
             FillLeftSlotsWithInventory();
         }
+        else if (Input.GetKeyDown(KeyCode.Q) && isPaused)
+        {
+            ChangePauseStatus();
+            DestroyAndCreate();
+            
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             Debug.Log("isrecipe: "+CheckRecipe());
+            
         }
     }
+
+    //New panel 
+    private void DestroyAndCreate()
+    {
+        Destroy(pnlCrafting);
+        GameObject newPnlCrafting = Instantiate(pnlCraftingPrefab);
+
+        newPnlCrafting.transform.SetParent(GameObject.Find("UI").transform);
+
+        newPnlCrafting.GetComponent<RectTransform>().offsetMin = new Vector2(100, 100);
+        newPnlCrafting.GetComponent<RectTransform>().offsetMax = new Vector2(-100, -100);
+
+        newPnlCrafting.transform.SetAsLastSibling();
+        newPnlCrafting.SetActive(true);
+        SetInitialState();
+    }
+
     private void FillLeftSlotsWithInventory()
     {
         for (int i = 0; i < left_slots.Length; i++)
@@ -135,39 +169,24 @@ public class CraftingHandler : MonoBehaviour
         return false;
     }
 
-    private void ClearSlots()
-    {
-        for (int i = 0; i < left_slots.Length; i++)
-        {
-            left_slots[i].transform.GetChild(0).GetComponent<RawImage>().texture = null;
-            Color color = left_slots[i].transform.GetChild(0).GetComponent<RawImage>().color;
-            color.a = 0f;
-            left_slots[i].transform.GetChild(0).GetComponent<RawImage>().color = color;
-
-            if(i < 3)
-            {
-                right_slots[i].GetComponent<RawImage>().texture = uiTexture;
-                color = left_slots[i].transform.GetComponent<RawImage>().color;
-                color.a = 1f;
-                right_slots[i].transform.GetComponent<RawImage>().color = color;
-            }
-
-            isWoodActive = false;
-            isGrassActive = false;
-            isCobbleStoneActive = false;
-        }
-    }
 
     private bool CheckRecipe()
     {
         List<string> input_recipe = new List<string>();
         for(int i = 0; i < right_slots.Length; i++)
         {
-            string tex = right_slots[i].transform.GetChild(0).GetComponent<RawImage>().texture.name;
-            input_recipe.Add(ConvertTextureToDrop(tex));
+            if (right_slots[i].transform.childCount > 0)
+            {
+                string tex = right_slots[i].transform.GetChild(0).gameObject.GetComponent<RawImage>().texture.name;
+                input_recipe.Add(ConvertTextureToDrop(tex));
+            }
+            
         }
         //check if the two lists are equal
-        return input_recipe.OrderBy(i => i).SequenceEqual(recipe1.OrderBy(i => i));
+        if(input_recipe.OrderBy(i => i).SequenceEqual(recipe1.OrderBy(i => i)))
+        {
+            //create recipe1
+        }
        
     }
 
