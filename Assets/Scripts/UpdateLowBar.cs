@@ -9,7 +9,7 @@ public class UpdateLowBar : MonoBehaviour
     [SerializeField] GameObject[] highlights;
     [SerializeField] GameObject[] texts;
     private int dimension = 5;
-    Dictionary<string, int> storedBlocks;
+    Inventory inventory;
     private int currentHighlightIndex = 0;
 
     //Textures
@@ -24,7 +24,7 @@ public class UpdateLowBar : MonoBehaviour
 
     private void Start()
     {
-        storedBlocks = GameObject.FindGameObjectWithTag("Player").GetComponent<CollectorScript>().storedBlocks;
+        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<CollectorScript>().inventory;
         slots = new GameObject[dimension];
         highlights = new GameObject[dimension];
         texts = new GameObject[dimension];
@@ -73,7 +73,7 @@ public class UpdateLowBar : MonoBehaviour
 
     private void UpdateIcons()
     {
-        foreach (KeyValuePair<string, int> item in storedBlocks)
+        foreach (KeyValuePair<string, int> item in inventory.GetStoredBlocks())
         {
             //Add icons
             if(item.Value != 0)
@@ -166,39 +166,43 @@ public class UpdateLowBar : MonoBehaviour
         return -1;
     }
 
-    public string FindHighlightBlock()
+    public string FindHighlightBlockToBuild()
     {
         for (int i = 0; i < slots.Length; i++)
         {
             if (i == currentHighlightIndex)
             {
                 string textName = slots[i].GetComponent<RawImage>().texture.name;
-                if (FindMaterialQuantity(textName) > 0)
+                string dropType = ConvertTextureToDrop(textName);
+                if (inventory.GetQuantity(dropType) > 0)
+                {
+                    inventory.RemoveItem(dropType);
                     return textName;
+                }
+                    
             }
         }
         return null;
     }
 
-    private int FindMaterialQuantity(string texName)
+    private string ConvertTextureToDrop(string text)
     {
-        switch (texName)
+        switch (text)
         {
-            //update quantities when you build
             case "CobbleStoneBlockIcon":
-                return storedBlocks["CobbleStoneDrop"] > 0 ? storedBlocks["CobbleStoneDrop"]-- : 0;
+                return "CobbleStoneDrop";
             case "WoodBlockIcon":
-                return storedBlocks["WoodDrop"] > 0 ? storedBlocks["WoodDrop"]-- : 0;
+                return "WoodDrop";
             case "GrassBlockIcon":
-                return storedBlocks["GrassDrop"] > 0 ? storedBlocks["GrassDrop"]-- : 0;
+                return "GrassDrop";
             default:
-                return -1;
+                return null;
         }
     }
 
     private void UpdateText()
     {
-        foreach (KeyValuePair<string, int> item in storedBlocks)
+        foreach (KeyValuePair<string, int> item in inventory.GetStoredBlocks())
         {
             int textToUpdate = item.Value;
                 switch (item.Key)

@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class CollectorScript : MonoBehaviour
 {
-    public Dictionary<string, int> storedBlocks;
+    public Inventory inventory;
     private void Awake()
     {
-        storedBlocks = new Dictionary<string, int>();
-        storedBlocks.Add("GrassDrop", 0);
-        storedBlocks.Add("CobbleStoneDrop", 0);
-        storedBlocks.Add("WoodDrop", 0);
+        inventory = new Inventory();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -18,15 +15,15 @@ public class CollectorScript : MonoBehaviour
         {
             case "CobbleStoneDrop":
                 HandleDrop(other.gameObject);
-                AddItem("CobbleStoneDrop");
+                inventory.AddItem("CobbleStoneDrop");
                 break;
             case "WoodDrop":
                 HandleDrop(other.gameObject);
-                AddItem("WoodDrop");
+                inventory.AddItem("WoodDrop");
                 break;
             case "GrassDrop":
                 HandleDrop(other.gameObject);
-                AddItem("GrassDrop");
+                inventory.AddItem("GrassDrop");
                 break;
             default:
                 break;
@@ -38,14 +35,5 @@ public class CollectorScript : MonoBehaviour
         drop.gameObject.GetComponent<Renderer>().enabled = false;
         drop.gameObject.GetComponent<BoxCollider>().enabled = false;
         Destroy(drop.gameObject);
-    }
-
-    private void AddItem(string dropType)
-    {
-        storedBlocks[dropType] += 1;
-        foreach (KeyValuePair<string, int> item in storedBlocks)
-        {
-            Debug.Log("Key: "+item.Key+ " Value: "+item.Value);
-        }
     }
 }

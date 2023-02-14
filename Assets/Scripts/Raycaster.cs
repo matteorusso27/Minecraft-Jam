@@ -104,7 +104,7 @@ public class Raycaster : MonoBehaviour
     }
     private void prefabToBuild(out GameObject gObject)
     {
-        string activeTex = lowBarScript.FindHighlightBlock();
+        string activeTex = lowBarScript.FindHighlightBlockToBuild();
         switch (activeTex)
         {
             case "CobbleStoneBlockIcon":

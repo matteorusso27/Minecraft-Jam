@@ -6,12 +6,12 @@ using UnityEngine.EventSystems;
 
 public class DraggableItem : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler
 {
-    private Image img;
+    private RawImage img;
     [HideInInspector] public Transform parentAfterDrag;
 
     private void Awake()
     {
-        img = GetComponent<Image>();
+        img = GetComponent<RawImage>();
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
