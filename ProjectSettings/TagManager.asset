@@ -16,6 +16,7 @@ TagManager:
   - Grid
   - Left_Crafting_Slot
   - Right_Crafting_Slot
+  - ResultCrafting_Slot
   layers:
   - Default
   - TransparentFX

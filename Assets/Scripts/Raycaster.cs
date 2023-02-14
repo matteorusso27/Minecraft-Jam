@@ -18,6 +18,8 @@ public class Raycaster : MonoBehaviour
     [SerializeField] GameObject cobbleStonePrefab;
     [SerializeField] GameObject woodPrefab;
 
+    public bool isGamePaused;
+
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
@@ -31,17 +33,22 @@ public class Raycaster : MonoBehaviour
     {
         bool isLeftClick = Input.GetMouseButtonDown(0);
         bool isRightClick = Input.GetMouseButton(1);
+        isGamePaused = GameObject.FindGameObjectWithTag("CraftManager").GetComponent<CraftingHandler>().isGamePaused();
         //tasto destro del mouse per creare
-        if (isLeftClick) 
+        if (!isGamePaused)
         {
-            CreateBlock();
-            
-        }
-        else if (isRightClick)
-        {
-            DamageBlock();
+            if (isLeftClick)
+            {
+                CreateBlock();
 
+            }
+            else if (isRightClick)
+            {
+                DamageBlock();
+
+            }
         }
+        
     }
 
     

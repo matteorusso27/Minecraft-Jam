@@ -13,12 +13,13 @@ public class CraftingHandler : MonoBehaviour
     private Inventory inventory;
 
 
-    bool isPaused;
+    private bool isPaused;
     private GameObject pnlCrafting;
 
     [SerializeField] private Texture2D grassTexture;
     [SerializeField] private Texture2D cobbleStoneTexture;
     [SerializeField] private Texture2D woodTexture;
+    [SerializeField] private Texture2D uiTexture;
 
     private bool isGrassActive;
     private bool isWoodActive;
@@ -42,7 +43,7 @@ public class CraftingHandler : MonoBehaviour
 
             //right slots are less
             if (i < 3)
-                right_slots[i] = GameObject.FindGameObjectsWithTag("Left_Crafting_Slot")[i];
+                right_slots[i] = GameObject.FindGameObjectsWithTag("Right_Crafting_Slot")[i];
         }
 
         isPaused = false;
@@ -64,7 +65,7 @@ public class CraftingHandler : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            CheckRecipe();
+            Debug.Log("isrecipe: "+CheckRecipe());
         }
     }
     private void FillLeftSlotsWithInventory()
@@ -145,10 +146,10 @@ public class CraftingHandler : MonoBehaviour
 
             if(i < 3)
             {
-                right_slots[i].transform.GetChild(0).GetComponent<RawImage>().texture = null;
-                color = left_slots[i].transform.GetChild(0).GetComponent<RawImage>().color;
-                color.a = 0f;
-                right_slots[i].transform.GetChild(0).GetComponent<RawImage>().color = color;
+                right_slots[i].GetComponent<RawImage>().texture = uiTexture;
+                color = left_slots[i].transform.GetComponent<RawImage>().color;
+                color.a = 1f;
+                right_slots[i].transform.GetComponent<RawImage>().color = color;
             }
 
             isWoodActive = false;
@@ -207,6 +208,9 @@ public class CraftingHandler : MonoBehaviour
         pnlCrafting.SetActive(isPaused);
         GameObject.FindGameObjectWithTag("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isPaused);
     }
-    
- 
+
+    public bool isGamePaused()
+    {
+        return isPaused;
+    }
 }
