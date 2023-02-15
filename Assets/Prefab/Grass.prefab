@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
+  basicMaterial: {fileID: 2100000, guid: 377df72f15966e34f9e8703077121ed8, type: 2}
   crackMaterials:
   - {fileID: 2100000, guid: ab4dd17653e60f648b3485b63c668d80, type: 2}
   - {fileID: 2100000, guid: 755d49606a2319c46a66f14749e11763, type: 2}

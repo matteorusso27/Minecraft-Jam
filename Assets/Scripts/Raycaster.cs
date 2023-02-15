@@ -17,6 +17,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] GameObject grassPrefab;
     [SerializeField] GameObject cobbleStonePrefab;
     [SerializeField] GameObject woodPrefab;
+    [SerializeField] GameObject coalPrefab;
 
     private Animator armAnimator;
     public bool isGamePaused;
@@ -26,6 +27,7 @@ public class Raycaster : MonoBehaviour
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
+        GameObject.FindGameObjectWithTag("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
         armAnimator = GameObject.Find("Arm").GetComponent<Animator>();
         if (script) lowBarScript = script;
         else
@@ -76,6 +78,7 @@ public class Raycaster : MonoBehaviour
         RaycastHit hit;
         castRay(out hit);
         //Possibility to create blocks at certain distance
+
         if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag("Block"))
         {
             float posX = hit.collider.gameObject.transform.position.x;
@@ -131,6 +134,9 @@ public class Raycaster : MonoBehaviour
                 gObject = woodPrefab;
                 return;
             case "GrassBlockIcon":
+                gObject = grassPrefab;
+                return;
+            case "CoalBlockIcon":
                 gObject = grassPrefab;
                 return;
             default:

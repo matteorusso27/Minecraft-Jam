@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 81075df622eb4744d89dca470d66d9d2, type: 2}
+  - {fileID: 2100000, guid: 419bd50955c34194ca75ff0b2d63c806, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
+  basicMaterial: {fileID: 2100000, guid: 419bd50955c34194ca75ff0b2d63c806, type: 2}
   crackMaterials:
   - {fileID: 2100000, guid: e4f90a7170049e148a75ce40888df026, type: 2}
   - {fileID: 2100000, guid: ab9aca88cf33e20449717e3ee9f4d19e, type: 2}

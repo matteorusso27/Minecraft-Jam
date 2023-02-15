@@ -10,7 +10,6 @@ TagManager:
   - WoodDrop
   - GrassDrop
   - LowBar
-  - LimitBlock
   - CraftManager
   - UI
   - Grid
@@ -19,6 +18,8 @@ TagManager:
   - ResultCrafting_Slot
   - Background_Craft
   - CraftingPanel
+  - DirtBlock
+  - CoalDrop
   layers:
   - Default
   - TransparentFX

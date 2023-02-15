@@ -16,12 +16,14 @@ public class UpdateLowBar : MonoBehaviour
     [SerializeField] private Texture2D grassTexture;
     [SerializeField] private Texture2D cobbleStoneTexture;
     [SerializeField] private Texture2D woodTexture;
+    [SerializeField] private Texture2D coalTexture;
     [SerializeField] private Texture2D blankTexture;
     [SerializeField] private Texture2D pikeTexture;
 
     private bool isGrassTexture;
     private bool isCobbleStoneTexture;
     private bool isWoodTexture;
+    private bool isCoalTexture;
     private bool isPikeTexture;
 
     private GameObject pike;
@@ -107,7 +109,16 @@ public class UpdateLowBar : MonoBehaviour
                             slots[FindEmptySlot()].GetComponent<RawImage>().texture = grassTexture;
                             isGrassTexture = true;
                         }
+                        break; 
+                    case "CoalDrop":
+
+                        if (!isCoalTexture)
+                        {
+                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = coalTexture;
+                            isCoalTexture = true;
+                        }
                         break;
+
                     case "Pike":
                         if (!isPikeTexture)
                         {
@@ -144,6 +155,14 @@ public class UpdateLowBar : MonoBehaviour
                         {
                             slots[FindSlot("GrassBlockIcon")].GetComponent<RawImage>().texture = blankTexture;
                             isGrassTexture = !isGrassTexture;
+                        }
+                            
+                        break;
+                    case "CoalDrop":
+                        if (isCoalTexture)
+                        {
+                            slots[FindSlot("CoalBlockIcon")].GetComponent<RawImage>().texture = blankTexture;
+                            isCoalTexture = !isCoalTexture;
                         }
                             
                         break;
@@ -214,6 +233,8 @@ public class UpdateLowBar : MonoBehaviour
                 return "WoodDrop";
             case "GrassBlockIcon":
                 return "GrassDrop";
+            case "CoalBlockIcon":
+                return "CoalDrop";
             default:
                 return null;
         }
@@ -247,6 +268,15 @@ public class UpdateLowBar : MonoBehaviour
                     case "GrassDrop":
 
                         slotIndex = FindSlot("GrassBlockIcon");
+                        if (slotIndex != -1)
+                        {
+                            texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
+                        }
+                    break;
+
+                    case "CoalDrop":
+
+                        slotIndex = FindSlot("CoalBlockIcon");
                         if (slotIndex != -1)
                         {
                             texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();

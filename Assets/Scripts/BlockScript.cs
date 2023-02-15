@@ -19,6 +19,7 @@ public class BlockScript : MonoBehaviour
     protected float dropRotationSpeed = 15f;
 
     protected Material[] materials;
+    [SerializeField] protected Material basicMaterial;
 
     public void TakeDamage(bool isPikeActive)
     {
@@ -81,9 +82,9 @@ public class BlockScript : MonoBehaviour
         transform.SetParent(cubedrop.transform);
         cubedrop.transform.localScale = scaleChangeNewCube;
         cubedrop.GetComponent<BoxCollider>().isTrigger = true;
+        cubedrop.GetComponent<Renderer>().material = basicMaterial;
         DropAnimationCoRoutine = StartCoroutine((DropMovement(cubedrop)));
     }
-    
     
     protected void ChangeMaterial()
     {

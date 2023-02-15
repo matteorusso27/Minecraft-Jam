@@ -20,12 +20,14 @@ public class CraftingHandler : MonoBehaviour
     [SerializeField] private Texture2D grassTexture;
     [SerializeField] private Texture2D cobbleStoneTexture;
     [SerializeField] private Texture2D woodTexture;
+    [SerializeField] private Texture2D coalTexture;
     [SerializeField] private Texture2D uiTexture;
     [SerializeField] private Texture2D pikeTexture;
 
     private bool isGrassActive;
     private bool isWoodActive;
     private bool isCobbleStoneActive;
+    private bool isCoalActive;
 
     private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
     private static List<string> recipe2 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
@@ -103,9 +105,10 @@ public class CraftingHandler : MonoBehaviour
 
         newPnlCrafting.GetComponent<RectTransform>().offsetMin = new Vector2(100, 100);
         newPnlCrafting.GetComponent<RectTransform>().offsetMax = new Vector2(-100, -100);
-
+        newPnlCrafting.gameObject.tag = "CraftingPanel";
         newPnlCrafting.transform.SetAsLastSibling();
         newPnlCrafting.SetActive(true);
+        pnlCraftingReference = newPnlCrafting;
         SetInitialState();
     }
 
@@ -163,6 +166,13 @@ public class CraftingHandler : MonoBehaviour
                 {
                     isGrassActive = true;
                     return grassTexture;
+                }
+                return null;
+            case "CoalDrop":
+                if (!isCoalActive)
+                {
+                    isCoalActive = true;
+                    return coalTexture;
                 }
                 return null;
             default:
@@ -229,6 +239,8 @@ public class CraftingHandler : MonoBehaviour
                 return "WoodDrop";
             case "GrassBlockIcon":
                 return "GrassDrop";
+            case "CoalBlockIcon":
+                return "CoalDrop";
             default:
                 return null;
         }
@@ -252,6 +264,7 @@ public class CraftingHandler : MonoBehaviour
             //Reactivate time
             Time.timeScale = 1;
         }
+       
         pnlCrafting.SetActive(isPaused);
         GameObject.FindGameObjectWithTag("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isPaused);
     }
@@ -267,7 +280,7 @@ public class CraftingHandler : MonoBehaviour
         Debug.Log("Coroutine started");
         pnlCrafting.GetComponent<Image>().raycastTarget = false;
         Time.timeScale = 1;
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3f);
 
         ChangePauseStatus();
         Debug.Log("Disabling");

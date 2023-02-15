@@ -11,6 +11,7 @@ public class Inventory
         storedBlocks.Add("GrassDrop", 0);
         storedBlocks.Add("CobbleStoneDrop", 0);
         storedBlocks.Add("WoodDrop", 0);
+        storedBlocks.Add("CoalDrop", 0);
         storedBlocks.Add("Pike", 0);
     }
 

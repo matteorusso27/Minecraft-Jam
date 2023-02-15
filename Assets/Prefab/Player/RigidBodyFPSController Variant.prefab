@@ -50,6 +50,7 @@ MonoBehaviour:
   grassPrefab: {fileID: 2069853202771800453, guid: ca7136935e4f86a46a839561a77f212b, type: 3}
   cobbleStonePrefab: {fileID: 2069853202771800453, guid: 1ec8350ddaec52d40a6f6276a0497229, type: 3}
   woodPrefab: {fileID: 2069853202771800453, guid: 4287d251ecf9efe479e06ae7dc2e7c03, type: 3}
+  coalPrefab: {fileID: 0}
   isGamePaused: 0
 --- !u!1 &570528674
 GameObject:
@@ -62,7 +63,6 @@ GameObject:
   - component: {fileID: 570528675}
   - component: {fileID: 570528678}
   - component: {fileID: 570528677}
-  - component: {fileID: 570528676}
   - component: {fileID: 570528679}
   m_Layer: 0
   m_Name: Arm
@@ -79,7 +79,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 570528674}
   m_LocalRotation: {x: -0.14401966, y: -0.067869686, z: -0.009901356, w: 0.987195}
-  m_LocalPosition: {x: 0.471, y: 0.042, z: 0.071}
+  m_LocalPosition: {x: 0.596, y: -0.011, z: -0.09}
   m_LocalScale: {x: 0.13954386, y: 0.14227457, z: 1.1345094}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -138,19 +138,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &570528676
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 570528674}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &570528679
 Animator:
   serializedVersion: 4
@@ -182,7 +169,6 @@ GameObject:
   - component: {fileID: 8978520296225158153}
   - component: {fileID: 3397329965080119570}
   - component: {fileID: 6140514716801370570}
-  - component: {fileID: 7190754496295672047}
   m_Layer: 0
   m_Name: Sleeve
   m_TagString: Untagged
@@ -255,19 +241,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7190754496295672047
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5397718236859070154}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8740067049092536057
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +252,6 @@ GameObject:
   - component: {fileID: 8988739831556234601}
   - component: {fileID: 3463608530953034622}
   - component: {fileID: 3394658979584666564}
-  - component: {fileID: 774546317221112775}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -353,19 +325,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &774546317221112775
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8740067049092536057}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &914115646279258030
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -421,9 +380,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
+      propertyPath: movementSettings.JumpForce
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 11400006, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13600000, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
+      propertyPath: m_Radius
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 13600000, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
       propertyPath: m_Material
@@ -483,15 +450,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4087cb66e179b5445b6fbb24402cd3eb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.716
+      value: -0.58
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4087cb66e179b5445b6fbb24402cd3eb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.014
+      value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4087cb66e179b5445b6fbb24402cd3eb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.533
+      value: 1.86
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4087cb66e179b5445b6fbb24402cd3eb, type: 3}
       propertyPath: m_LocalRotation.w

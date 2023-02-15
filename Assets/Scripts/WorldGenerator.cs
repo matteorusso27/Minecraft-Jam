@@ -1,4 +1,4 @@
-/*
+
 using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
@@ -9,7 +9,6 @@ public class WorldGenerator : MonoBehaviour
     public float terDetail;
     public float terHeight;
     int seed;
-
     public GameObject[] blocks;
     
     void Start()
@@ -24,12 +23,27 @@ public class WorldGenerator : MonoBehaviour
             for(int z = 0 ; z < sizeZ; z++)
             {
                 int y = (int)(Mathf.PerlinNoise((x / 2 + seed) / terDetail, (z / 2 + seed) / terDetail) * terHeight);
-                GameObject grass = Instantiate(blocks[0], new Vector3(x, y, z), Quaternion.identity);
+                int randomNumber = Random.Range(1, 4);
+                GameObject toInstantiate = null;
+                if(randomNumber == 1)
+                {
+                    toInstantiate = blocks[0];
+                }
+                else if(randomNumber == 2)
+                {
+                    toInstantiate = blocks[1];
+                }
+                else if (randomNumber == 3)
+                {
+                    toInstantiate = blocks[2];
+                }
+
+                GameObject grass = Instantiate(toInstantiate, new Vector3(x, y, z), Quaternion.identity);
                 grass.transform.SetParent(GameObject.FindGameObjectWithTag("Environment").transform);
             }
     }
 }
-*/
+
 /*
 using UnityEngine;
 
@@ -102,50 +116,46 @@ public class WorldGenerator : MonoBehaviour
     }
 }
 */
-
+/*
 using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
 {
-    public GameObject limitBlockPrefab;
+    public GameObject dirtBlockPrefab;
     public GameObject grassBlockPrefab;
     public GameObject cobblestoneBlockPrefab;
     public GameObject woodBlockPrefab;
 
     private Transform environment;
-    private Transform pyramid1;
-    private Transform pyramid2;
-    private Transform pyramid3;
 
-    private Transform[] pyramid;
+    private Transform pyramidObject;
     [SerializeField] int limitBlockDimension = 100;
 
     // Initialize pyramid size
-    [SerializeField] int layerSizePyramid = 23;
+    [SerializeField] int layerSizePyramid = 25;
 
+    [SerializeField] public Vector3 pyramidPosition = new Vector3(31.5f,1,36);
     
     private void Start()
     {
         environment = GameObject.FindWithTag("Environment").transform;
-        pyramid1 = GameObject.Find("pyramid1").transform;
-        pyramid2 = GameObject.Find("pyramid2").transform;
-        pyramid3 = GameObject.Find("pyramid3").transform;
+        pyramidObject = GameObject.Find("Pyramid").transform;
         // Generate base layer of limit block
+        /*
         for (int i = 0; i < limitBlockDimension; i++)
         {
             for (int j = 0; j < limitBlockDimension; j++)
             {
                 Vector3 blockPosition = new Vector3(i, -1, j);
                 //Instantiate(limitBlockPrefab, blockPosition, Quaternion.identity, environment);
-                Instantiate(grassBlockPrefab, new Vector3(blockPosition.x,blockPosition.y+1, blockPosition.z), Quaternion.identity, environment);
+                Instantiate(dirtBlockPrefab, new Vector3(blockPosition.x,blockPosition.y+1, blockPosition.z), Quaternion.identity, environment);
             }
         }
 
-        // Generate 4 pyramids on top of the base layer of limit block
-        GeneratePyramid(new Vector3(15, 1, 15),pyramid1);
-        GeneratePyramid(new Vector3(30, 1, 30), pyramid2);
-        GeneratePyramid(new Vector3(70, 1, 45), pyramid3);
-        //GeneratePyramid(new Vector3(30, 1, 60));
+        */
+/*
+        // Generate pyramids on top of the base layer of limit block
+        GeneratePyramid(pyramidPosition, pyramidObject); 
     }
 
     private void GeneratePyramid(Vector3 center,Transform pyramid)
@@ -174,11 +184,11 @@ public class WorldGenerator : MonoBehaviour
                         int blockType = Random.Range(0, 2);
                         if (blockType == 0)
                         {
-                            Instantiate(cobblestoneBlockPrefab, blockPosition, Quaternion.identity, pyramid);
+                            Instantiate(cobblestoneBlockPrefab, blockPosition, Quaternion.identity, pyramid).transform.SetParent(pyramid);
                         }
                         else
                         {
-                            Instantiate(woodBlockPrefab, blockPosition, Quaternion.identity, pyramid);
+                            Instantiate(woodBlockPrefab, blockPosition, Quaternion.identity, pyramid).transform.SetParent(pyramid);
                         }
                     }
                 }
@@ -186,3 +196,4 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 }
+*/

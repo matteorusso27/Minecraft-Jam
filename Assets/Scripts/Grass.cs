@@ -16,7 +16,6 @@ public class Grass : BlockScript
     protected override void SpawnDrop()
     {
         base.SpawnDrop();
-        cubedrop.GetComponent<Renderer>().material.color = Color.green;
         cubedrop.gameObject.name = dropTag;
         cubedrop.gameObject.tag = dropTag;
     }

@@ -24,6 +24,10 @@ public class CollectorScript : MonoBehaviour
             case "GrassDrop":
                 HandleDrop(other.gameObject);
                 inventory.IncrementItem("GrassDrop");
+                break; 
+            case "CoalDrop":
+                HandleDrop(other.gameObject);
+                inventory.IncrementItem("CoalDrop");
                 break;
             default:
                 break;
