@@ -18,6 +18,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] GameObject cobbleStonePrefab;
     [SerializeField] GameObject woodPrefab;
 
+    private Animator armAnimator;
     public bool isGamePaused;
 
     private bool isPikeActive;
@@ -25,7 +26,8 @@ public class Raycaster : MonoBehaviour
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
-        if(script) lowBarScript = script;
+        armAnimator = GameObject.Find("Arm").GetComponent<Animator>();
+        if (script) lowBarScript = script;
         else
         {
             Debug.Log("Not found reference");
@@ -50,6 +52,10 @@ public class Raycaster : MonoBehaviour
             {
                 DamageBlock();
 
+            }
+            else
+            {
+                armAnimator.SetBool("isDestroying", false);
             }
         }
         
@@ -109,7 +115,7 @@ public class Raycaster : MonoBehaviour
         {
             GameObject go = hit.collider.gameObject;
             go.GetComponent<BlockScript>().TakeDamage(isPikeActive);
-
+            armAnimator.SetBool("isDestroying", true);
             Debug.Log("health: " + go.GetComponent<BlockScript>().currentHealth);
         }
     }

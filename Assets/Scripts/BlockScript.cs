@@ -7,7 +7,7 @@ public class BlockScript : MonoBehaviour
     protected float maxHealth;
     public float currentHealth; //levare il public, è solo per debug
 
-    private int handDamage = 12;
+    private int handDamage = 100; //debug value, set this to 12f
     private int pikeDamage = 30;
     //Block drop variables
     protected GameObject cubedrop;

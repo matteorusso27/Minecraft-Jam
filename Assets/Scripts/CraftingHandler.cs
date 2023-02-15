@@ -263,10 +263,10 @@ public class CraftingHandler : MonoBehaviour
 
     IEnumerator CloseUI()
     {
-        
-            Debug.Log("Coroutine started");
-            pnlCrafting.GetComponent<Image>().raycastTarget = false;
-            Time.timeScale = 1;
+        GetComponent<CraftingHandler>().enabled = false;
+        Debug.Log("Coroutine started");
+        pnlCrafting.GetComponent<Image>().raycastTarget = false;
+        Time.timeScale = 1;
         yield return new WaitForSeconds(4f);
 
         ChangePauseStatus();
