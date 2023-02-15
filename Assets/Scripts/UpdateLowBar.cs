@@ -24,9 +24,11 @@ public class UpdateLowBar : MonoBehaviour
     private bool isWoodTexture;
     private bool isPikeTexture;
 
+    private GameObject pike;
     private void Start()
     {
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<CollectorScript>().inventory;
+        pike = GameObject.Find("Pike");
         slots = new GameObject[dimension];
         highlights = new GameObject[dimension];
         texts = new GameObject[dimension];
@@ -275,10 +277,12 @@ public class UpdateLowBar : MonoBehaviour
                 string textName = slots[i].GetComponent<RawImage>().texture.name;
                 if (textName != "Pike")
                 {
+                    pike.GetComponent<MeshRenderer>().enabled = false;
                     return false;
                 }
                 else
                 {
+                    pike.GetComponent<MeshRenderer>().enabled = true;
                     return true;
                 }
             }
