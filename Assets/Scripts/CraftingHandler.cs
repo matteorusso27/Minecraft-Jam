@@ -31,7 +31,7 @@ public class CraftingHandler : MonoBehaviour
     private bool isClosing;
 
     private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","CoalDrop"};
-    private static int[] quantities1 = new int[] { 10,10,10 };
+    private static int[] quantities1 = new int[] { 5,5,5 };
     private static List<string> recipe2 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
 
     void Start()

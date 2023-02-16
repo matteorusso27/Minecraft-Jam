@@ -26,6 +26,7 @@ public class Raycaster : MonoBehaviour
 
     private float damagePerSecond = 10;
     private float handDamage = 50f;
+    private float pikeDamage = 120f;
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
@@ -55,7 +56,6 @@ public class Raycaster : MonoBehaviour
             else if (isRightClick)
             {
                 CheckDamage();
-
             }
             else
             {
@@ -65,7 +65,7 @@ public class Raycaster : MonoBehaviour
 
         if (isPikeActive)
         {
-            damagePerSecond = 30f;
+            damagePerSecond = pikeDamage;
         }
         else
         {
@@ -140,13 +140,14 @@ public class Raycaster : MonoBehaviour
             {
                 GameObject go = hit.collider.gameObject;
                 go.GetComponent<BlockScript>().TakeDamage(damagePerSecond);
-                armAnimator.SetBool("isDestroying", true);
+                
                 Debug.Log("health: " + go.GetComponent<BlockScript>().currentHealth);
             }
             else if (hit.collider.gameObject.CompareTag("Enemy"))
             {
                 DamageEnemy(hit.collider.gameObject);
             }
+            armAnimator.SetBool("isDestroying", true);
         }
     }
     private void prefabToBuild(out GameObject gObject)
@@ -164,7 +165,7 @@ public class Raycaster : MonoBehaviour
                 gObject = grassPrefab;
                 return;
             case "CoalBlockIcon":
-                gObject = grassPrefab;
+                gObject = coalPrefab;
                 return;
             default:
                 gObject = null;

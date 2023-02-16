@@ -282,8 +282,7 @@ public class UpdateLowBar : MonoBehaviour
                             texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
                         }
                     break;
-
-                    default:
+                default:
                         break;
                 }
         }
@@ -293,7 +292,7 @@ public class UpdateLowBar : MonoBehaviour
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (isTextureBlank(slots[i]))
+            if (isTextureBlank(slots[i]) || slots[i].GetComponent<RawImage>().texture.name == "Pike")
                 texts[i].GetComponent<Text>().text = string.Empty;
         }
     }

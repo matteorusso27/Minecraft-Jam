@@ -7,7 +7,7 @@ public class Coal : BlockScript
     public Material[] crackMaterials;
     private void Awake()
     {
-        maxHealth = 50f;
+        maxHealth = 150f;
         currentHealth = maxHealth;
         dropTag = "CoalDrop";
         materials = crackMaterials;

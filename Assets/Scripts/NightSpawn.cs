@@ -7,21 +7,20 @@ public class NightSpawn : MonoBehaviour
     [SerializeField] private GameObject enemy;
     public float rotationSpeed = 5f;
     private float dropHeight = 7f;
-    [SerializeField] private bool isNight; 
+    private float timeIntervalToSpawn = 20f;
+    public bool night;
+
+    private List<GameObject> spawnedSpiders;
+    private void Start()
+    {
+        spawnedSpiders = new List<GameObject>();
+        StartCoroutine(SpawnEnemyCoRoutine());
+    }
     void Update()
     {
         ChangeTime();
-        if (Mathf.Abs(transform.rotation.x) < Mathf.PI) isNight = false;
-        else
-        {
-            isNight = true;
-        }
-        Quaternion originalRotation = transform.localRotation;
-        if (transform.localEulerAngles.x > 360)
-        {
-            transform.localRotation = new Quaternion(0, originalRotation.y, originalRotation.z, originalRotation.w);
-        }
-        StartCoroutine(SpawnEnemyCoRoutine());
+        night = IsNight();
+        KillSpiders();
     }
 
     private void ChangeTime()
@@ -32,11 +31,35 @@ public class NightSpawn : MonoBehaviour
     {
         while (true)
         {
-            if (isNight)
+            if (IsNight())
             {
-                Instantiate(enemy, new Vector3(Random.Range(3,25), dropHeight, Random.Range(3, 25)), Quaternion.identity);
+                spawnedSpiders.Add(Instantiate(enemy, new Vector3(Random.Range(3,25), dropHeight, Random.Range(3, 25)), Quaternion.identity));
             }
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(timeIntervalToSpawn);
         }
+    }
+
+    bool IsNight()
+    {
+        // If the angle is greater than the threshold angle, it is nighttime
+        if (transform.rotation.eulerAngles.x >= 0 && transform.rotation.eulerAngles.x <= 90)
+        {
+            return false; // It is night
+        }
+        return true; // It is not night
+    }
+
+    private void KillSpiders()
+    {
+        if(spawnedSpiders.Count > 0 && !IsNight())
+        {
+            foreach (GameObject spider in spawnedSpiders)
+            {
+                Destroy(spider);
+            }
+
+            spawnedSpiders = new List<GameObject>();
+        }
+        
     }
 }
