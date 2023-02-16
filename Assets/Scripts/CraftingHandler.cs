@@ -307,7 +307,7 @@ public class CraftingHandler : MonoBehaviour
         return isPaused;
     }
 
-    IEnumerator CloseUI()
+    private IEnumerator CloseUI()
     {
         isClosing = true;
         Debug.Log("Coroutine started");
