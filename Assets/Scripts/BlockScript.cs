@@ -7,8 +7,6 @@ public class BlockScript : MonoBehaviour
     protected float maxHealth;
     public float currentHealth; //levare il public, è solo per debug
 
-    private int handDamage = 100; //debug value, set this to 12f
-    private int pikeDamage = 30;
     //Block drop variables
     protected GameObject cubedrop;
     protected string dropTag = "Drop"; 
@@ -21,16 +19,12 @@ public class BlockScript : MonoBehaviour
     protected Material[] materials;
     [SerializeField] protected Material basicMaterial;
 
-    public void TakeDamage(bool isPikeActive)
+    public void TakeDamage(float dps)
     {
-        if (isPikeActive)
-        {
-            currentHealth -= pikeDamage * Time.deltaTime; //damage per second
-        }
-        else
-        {
-            currentHealth -= handDamage * Time.deltaTime; //damage per second
-        }
+        
+        currentHealth -= dps * Time.deltaTime; //damage per second
+          
+        
         if (currentHealth < 0) DropAndDestroy();
         ChangeMaterial();
     }

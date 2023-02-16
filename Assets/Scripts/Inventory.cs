@@ -24,6 +24,11 @@ public class Inventory
     {
         storedBlocks[DropType] -= 1;
     }
+    
+    public void DecrementItem(string DropType,int quantity)
+    {
+        storedBlocks[DropType] -= quantity;
+    }
 
     public int GetQuantity(string DropType)
     {

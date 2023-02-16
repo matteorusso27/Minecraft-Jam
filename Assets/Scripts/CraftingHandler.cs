@@ -28,8 +28,10 @@ public class CraftingHandler : MonoBehaviour
     private bool isWoodActive;
     private bool isCobbleStoneActive;
     private bool isCoalActive;
+    private bool isClosing;
 
-    private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
+    private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","CoalDrop"};
+    private static int[] quantities1 = new int[] { 10,10,10 };
     private static List<string> recipe2 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
 
     void Start()
@@ -66,12 +68,14 @@ public class CraftingHandler : MonoBehaviour
         isGrassActive = false;
         isWoodActive = false;
         isCobbleStoneActive = false;
+        isCoalActive = false;
+        isClosing = false;
         pnlCrafting.SetActive(false);
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && !isPaused)
+        if (Input.GetKeyDown(KeyCode.Q) && !isPaused && !isClosing)
         {
             //Clear slots
             //ClearSlots();
@@ -82,7 +86,7 @@ public class CraftingHandler : MonoBehaviour
             //Fill the left slots with the inventory items
             FillLeftSlotsWithInventory();
         }
-        else if (Input.GetKeyDown(KeyCode.Q) && isPaused)
+        else if (Input.GetKeyDown(KeyCode.Q) && isPaused && !isClosing)
         {
             ChangePauseStatus();
             DestroyAndCreate();
@@ -91,8 +95,8 @@ public class CraftingHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             CheckRecipe();
-            
         }
+        Debug.Log(isPaused);
     }
 
     //New panel 
@@ -133,6 +137,7 @@ public class CraftingHandler : MonoBehaviour
                             Color color = itemImg.color;
                             color.a = 1f;
                             itemImg.color = color;
+                            itemImg.GetComponentInChildren<Text>().text = pair.Value.ToString();
                             break; // break to pass to the next slot, otherwise it overwrites the same slot
                         }
                     }
@@ -202,23 +207,31 @@ public class CraftingHandler : MonoBehaviour
         //check if the provided materials form a recipe
         if (input_recipe.OrderBy(i => i).SequenceEqual(recipe1.OrderBy(i => i)))
         {
-            //create recipe1
-            if (result_slot.transform.childCount > 0)
+            //Check quantities
+            if (AreMaterialsEnough(recipe1, quantities1))
             {
-                RawImage rawImgSon = result_slot.transform.GetChild(0).GetComponent<RawImage>();
-                if (rawImgSon.texture == null)
+                //create recipe1
+                if (result_slot.transform.childCount > 0)
                 {
-                    rawImgSon.texture = pikeTexture;
-                    Color sonColor = rawImgSon.color;
-                    sonColor.a = 1f;
-                    rawImgSon.color = sonColor;
-                    helpText.text = "That's how it's done! You got a Pike! The UI will now close to let you play";
-                    inventory.IncrementItem("Pike");
-                    StartCoroutine(CloseUI());
-                    //StartCoroutine(MyCoroutine());
-                    
+                    RawImage rawImgSon = result_slot.transform.GetChild(0).GetComponent<RawImage>();
+                    if (rawImgSon.texture == null)
+                    {
+                        rawImgSon.texture = pikeTexture;
+                        Color sonColor = rawImgSon.color;
+                        sonColor.a = 1f;
+                        rawImgSon.color = sonColor;
+                        helpText.text = "That's how it's done! You got a Pike! The UI will now close to let you play";
+                        inventory.IncrementItem("Pike");
+                        StartCoroutine(CloseUI());
+
+                    }
                 }
             }
+            else
+            {
+                helpText.text = "Quantites are not enough to create the recipe";
+            }
+            
 
         }
         else
@@ -228,6 +241,26 @@ public class CraftingHandler : MonoBehaviour
 
     }
 
+    private bool AreMaterialsEnough(List<string> recipe, int[] quantities)
+    {
+        for (int i = 0; i < recipe.Count; i++)
+        {
+            if (inventory.GetQuantity(recipe[i]) >= quantities[i])
+                continue;
+            else
+            {
+                return false;
+            }
+        }
+
+        //Remove quantities because the recipe is correct
+        for (int i = 0; i < recipe.Count; i++)
+        {
+            inventory.DecrementItem(recipe[i],quantities1[i]);
+        }
+        return true;
+        
+    }
     //Da mettere in una classe statica
     private string ConvertTextureToDrop(string text)
     {
@@ -276,7 +309,7 @@ public class CraftingHandler : MonoBehaviour
 
     IEnumerator CloseUI()
     {
-        GetComponent<CraftingHandler>().enabled = false;
+        isClosing = true;
         Debug.Log("Coroutine started");
         pnlCrafting.GetComponent<Image>().raycastTarget = false;
         Time.timeScale = 1;
@@ -285,6 +318,6 @@ public class CraftingHandler : MonoBehaviour
         ChangePauseStatus();
         Debug.Log("Disabling");
         DestroyAndCreate();
-        yield return null;
+        StopCoroutine(CloseUI());
     }
 }
