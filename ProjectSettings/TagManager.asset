@@ -21,6 +21,7 @@ TagManager:
   - DirtBlock
   - CoalDrop
   - Enemy
+  - BigEnvironment
   layers:
   - Default
   - TransparentFX

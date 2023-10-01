@@ -33,7 +33,7 @@ public class TerrainGenerator : MonoBehaviour
                 maxY += groundHeight;
 
                 GameObject grass = Instantiate(blocks[0], new Vector3(x, maxY, z), Quaternion.identity);
-                grass.transform.SetParent(GameObject.FindGameObjectWithTag("Environment").transform);
+                grass.transform.SetParent(GameObject.FindGameObjectWithTag("BigEnvironment").transform);
 
                 for (int y = 0; y < maxY; y++)
                 {
@@ -41,13 +41,13 @@ public class TerrainGenerator : MonoBehaviour
                     if (y >= maxY - dirtLayers)
                     {
                         GameObject dirt = Instantiate(blocks[1], new Vector3(x, y, z), Quaternion.identity);
-                        dirt.transform.SetParent(GameObject.FindGameObjectWithTag("Environment").transform);
+                        dirt.transform.SetParent(GameObject.FindGameObjectWithTag("BigEnvironment").transform);
                     }
                     else
                     {
 
                         GameObject stone = Instantiate(blocks[2], new Vector3(x, y, z), Quaternion.identity);
-                        stone.transform.SetParent(GameObject.FindGameObjectWithTag("Environment").transform);
+                        stone.transform.SetParent(GameObject.FindGameObjectWithTag("BigEnvironment").transform);
                     }
                 }
             }

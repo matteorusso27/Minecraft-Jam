@@ -5,9 +5,9 @@ using UnityEngine;
 public class NightSpawn : MonoBehaviour
 {
     [SerializeField] private GameObject enemy;
-    public float rotationSpeed = 5f;
+    public float rotationSpeed = 8f;
     private float dropHeight = 7f;
-    private float timeIntervalToSpawn = 20f;
+    private float timeIntervalToSpawn = 5f;
     public bool night;
 
     private List<GameObject> spawnedSpiders;
@@ -33,7 +33,7 @@ public class NightSpawn : MonoBehaviour
         {
             if (IsNight())
             {
-                spawnedSpiders.Add(Instantiate(enemy, new Vector3(Random.Range(3,25), dropHeight, Random.Range(3, 25)), Quaternion.identity));
+                spawnedSpiders.Add(Instantiate(enemy, new Vector3(Random.Range(0,25), dropHeight, Random.Range(0, 25)), Quaternion.identity));
             }
             yield return new WaitForSeconds(timeIntervalToSpawn);
         }

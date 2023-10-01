@@ -25,8 +25,8 @@ public class Raycaster : MonoBehaviour
     private bool isPikeActive;
 
     private float damagePerSecond = 10;
-    private float handDamage = 50f;
-    private float pikeDamage = 120f;
+    private float handDamage = 100f;
+    private float pikeDamage = 180f;
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
@@ -35,7 +35,7 @@ public class Raycaster : MonoBehaviour
         if (script) lowBarScript = script;
         else
         {
-            Debug.Log("Not found reference");
+            Debug.LogError("Not found reference");
         }
     }
     private void Update()
@@ -62,16 +62,18 @@ public class Raycaster : MonoBehaviour
                 armAnimator.SetBool("isDestroying", false);
             }
         }
-
+            
         if (isPikeActive)
         {
             damagePerSecond = pikeDamage;
+            
         }
         else
         {
             damagePerSecond = handDamage;
         }
-        
+
+        //GameObject.Find("Pike").SetActive(isPikeActive);
     }
 
     
@@ -121,7 +123,7 @@ public class Raycaster : MonoBehaviour
         }
         else
         {
-            Debug.Log("Prefab not instantiated");
+            Debug.LogError("Prefab not instantiated");
         }
     }
     
@@ -140,8 +142,6 @@ public class Raycaster : MonoBehaviour
             {
                 GameObject go = hit.collider.gameObject;
                 go.GetComponent<BlockScript>().TakeDamage(damagePerSecond);
-                
-                Debug.Log("health: " + go.GetComponent<BlockScript>().currentHealth);
             }
             else if (hit.collider.gameObject.CompareTag("Enemy"))
             {

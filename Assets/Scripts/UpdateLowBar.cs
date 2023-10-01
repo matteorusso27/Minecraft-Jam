@@ -304,7 +304,7 @@ public class UpdateLowBar : MonoBehaviour
             if (i == currentHighlightIndex)
             {
                 string textName = slots[i].GetComponent<RawImage>().texture.name;
-                if (textName != "Pike")
+                if (textName.ToLower() != "pike")
                 {
                     pike.GetComponent<MeshRenderer>().enabled = false;
                     return false;
