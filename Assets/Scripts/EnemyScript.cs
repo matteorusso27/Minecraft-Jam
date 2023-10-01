@@ -44,7 +44,6 @@ public class EnemyScript : MonoBehaviour
 
     public void TakeDamage(float dps)
     {
-        Debug.Log("enemy: " + health);
         health -= dps * Time.deltaTime;
     }
 

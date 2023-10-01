@@ -16,6 +16,6 @@ public class test : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
+        //Debug.Log(other);
     }
 }

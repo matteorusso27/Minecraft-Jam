@@ -96,7 +96,6 @@ public class CraftingHandler : MonoBehaviour
         {
             CheckRecipe();
         }
-        Debug.Log(isPaused);
     }
 
     //New panel 
@@ -310,13 +309,11 @@ public class CraftingHandler : MonoBehaviour
     private IEnumerator CloseUI()
     {
         isClosing = true;
-        Debug.Log("Coroutine started");
         pnlCrafting.GetComponent<Image>().raycastTarget = false;
         Time.timeScale = 1;
         yield return new WaitForSeconds(3f);
 
         ChangePauseStatus();
-        Debug.Log("Disabling");
         DestroyAndCreate();
         StopCoroutine(CloseUI());
     }
