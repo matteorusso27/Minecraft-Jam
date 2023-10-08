@@ -25,8 +25,8 @@ public class Raycaster : MonoBehaviour
     private bool isPikeActive;
 
     private float damagePerSecond = 10;
-    private float handDamage = 100f;
-    private float pikeDamage = 180f;
+    private float handDamage = 80f;
+    private float pikeDamage = 130f;
     private void Awake()
     {
         UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
@@ -129,7 +129,8 @@ public class Raycaster : MonoBehaviour
     
     private void DamageEnemy(GameObject enemyObj)
     {
-        enemyObj.GetComponent<EnemyScript>().TakeDamage(damagePerSecond);
+        if(isPikeActive)
+            enemyObj.GetComponent<EnemyScript>().TakeDamage(damagePerSecond);
     }
     
     private void CheckDamage()

@@ -5,10 +5,13 @@ using UnityEngine;
 public class CollectorScript : MonoBehaviour
 {
     public Inventory inventory;
+    private AudioSource pickupSoundManager;
     private void Awake()
     {
+        pickupSoundManager = GameObject.FindGameObjectWithTag("PickObjectManager").GetComponent<AudioSource>();
         inventory = new Inventory();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         switch (other.gameObject.tag)
@@ -39,5 +42,6 @@ public class CollectorScript : MonoBehaviour
         drop.gameObject.GetComponent<Renderer>().enabled = false;
         drop.gameObject.GetComponent<BoxCollider>().enabled = false;
         Destroy(drop.gameObject);
+        pickupSoundManager.Play();
     }
 }

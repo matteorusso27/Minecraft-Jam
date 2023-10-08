@@ -20,7 +20,7 @@ public class EnemyScript : MonoBehaviour
     {
         targetToFollow = GameObject.FindWithTag("Player").transform;
         anim = GetComponent<Animator>();
-        damageSoundPlayer = GetComponent<AudioSource>();
+        damageSoundPlayer = GameObject.FindGameObjectWithTag("DamagePlayer").GetComponent<AudioSource>();
     }
 
     void Update()

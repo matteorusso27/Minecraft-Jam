@@ -22,6 +22,8 @@ TagManager:
   - CoalDrop
   - Enemy
   - BigEnvironment
+  - PickObjectManager
+  - DamagePlayer
   layers:
   - Default
   - TransparentFX
