@@ -9,10 +9,6 @@ public class InstructionScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            isActive = !isActive;
-            gameObject.GetComponent<Text>().enabled = isActive;
-        }
+        
     }
 }

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Utils;
 
 public class CollectorScript : MonoBehaviour
 {
@@ -14,23 +16,24 @@ public class CollectorScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        switch (other.gameObject.tag)
+        Enum.TryParse(other.gameObject.tag, out Tags tag);
+        switch (tag)
         {
-            case "CobbleStoneDrop":
+            case Tags.CobbleStoneDrop:
                 HandleDrop(other.gameObject);
-                inventory.IncrementItem("CobbleStoneDrop");
+                inventory.IncrementItem(InventoryItem.CobbleStone);
                 break;
-            case "WoodDrop":
+            case Tags.WoodDrop:
                 HandleDrop(other.gameObject);
-                inventory.IncrementItem("WoodDrop");
+                inventory.IncrementItem(InventoryItem.Wood);
                 break;
-            case "GrassDrop":
+            case Tags.GrassDrop:
                 HandleDrop(other.gameObject);
-                inventory.IncrementItem("GrassDrop");
+                inventory.IncrementItem(InventoryItem.Grass);
                 break; 
-            case "CoalDrop":
+            case Tags.CoalDrop:
                 HandleDrop(other.gameObject);
-                inventory.IncrementItem("CoalDrop");
+                inventory.IncrementItem(InventoryItem.Coal);
                 break;
             default:
                 break;

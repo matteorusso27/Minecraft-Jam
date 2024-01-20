@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Utils;
 
 public class Raycaster : MonoBehaviour
 {
@@ -13,45 +12,40 @@ public class Raycaster : MonoBehaviour
     float minDistanceHit = 1f;
 
     private UpdateLowBar lowBarScript;
+    [SerializeField] private CraftingHandler craftingHandler;
 
     [SerializeField] GameObject grassPrefab;
     [SerializeField] GameObject cobbleStonePrefab;
     [SerializeField] GameObject woodPrefab;
     [SerializeField] GameObject coalPrefab;
 
-    private Animator armAnimator;
-    public bool isGamePaused;
+    [SerializeField] GameObject pike;
 
-    private bool isPikeActive;
+    private Animator armAnimator;
+    public bool isGamePaused => craftingHandler.isGamePaused();
+    private bool isPikeActive => pike.activeInHierarchy;
 
     private float damagePerSecond = 10;
     private float handDamage = 80f;
     private float pikeDamage = 130f;
-    private void Awake()
+    private void Start()
     {
-        UpdateLowBar script = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>();
-        GameObject.FindGameObjectWithTag("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
+        lowBarScript = GameObject.FindGameObjectWithTag(Tags.LowBar.ToString()).GetComponent<UpdateLowBar>();
+        GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
         armAnimator = GameObject.Find("Arm").GetComponent<Animator>();
-        if (script) lowBarScript = script;
-        else
-        {
-            Debug.LogError("Not found reference");
-        }
     }
+
     private void Update()
     {
         bool isLeftClick = Input.GetMouseButtonDown(0);
         bool isRightClick = Input.GetMouseButton(1);
         
-        isGamePaused = GameObject.FindGameObjectWithTag("CraftManager").GetComponent<CraftingHandler>().isGamePaused();
-        isPikeActive = GameObject.FindGameObjectWithTag("LowBar").GetComponent<UpdateLowBar>().isPikeActive();
-        //tasto destro del mouse per creare
+        //Right click to create
         if (!isGamePaused)
         {
             if (isLeftClick)
             {
                 CheckHit();
-
             }
             else if (isRightClick)
             {
@@ -66,14 +60,13 @@ public class Raycaster : MonoBehaviour
         if (isPikeActive)
         {
             damagePerSecond = pikeDamage;
-            
         }
         else
         {
             damagePerSecond = handDamage;
         }
 
-        //GameObject.Find("Pike").SetActive(isPikeActive);
+        pike.SetActive(lowBarScript.IsHighlighted("pike"));
     }
 
     
@@ -92,7 +85,7 @@ public class Raycaster : MonoBehaviour
         CastRay(out hit);
         //Possibility to create blocks at certain distance
 
-        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag("Block"))
+        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag(Tags.Block.ToString()))
         {
             CreateBlock(ref hit);
         }
@@ -106,20 +99,22 @@ public class Raycaster : MonoBehaviour
 
         GameObject prefab;
         prefabToBuild(out prefab);
-        if (prefab && prefab.tag == "Block") // I don't want to build if I handle the pike
+        if (prefab && prefab.tag.Equals(Tags.Block.ToString())) // I don't want to build if I handle the pike
         {
             if (hit.normal.x != 0)
             {
-                Instantiate(prefab, new Vector3(hit.normal.x + posX, posY, posZ), Quaternion.identity);
+                posX += hit.normal.x;
             }
             else if (hit.normal.y != 0)
             {
-                Instantiate(prefab, new Vector3(posX, posY + hit.normal.y, posZ), Quaternion.identity);
+                posY += hit.normal.y;
             }
             else
             {
-                Instantiate(prefab, new Vector3(posX, posY, posZ + hit.normal.z), Quaternion.identity);
+                posZ += hit.normal.z;
             }
+
+            Instantiate(prefab, new Vector3(posX, posY, posZ), Quaternion.identity);
         }
         else
         {
@@ -129,8 +124,7 @@ public class Raycaster : MonoBehaviour
     
     private void DamageEnemy(GameObject enemyObj)
     {
-        if(isPikeActive)
-            enemyObj.GetComponent<EnemyScript>().TakeDamage(damagePerSecond);
+        if(isPikeActive) enemyObj.GetComponent<EnemyScript>().TakeDamage(damagePerSecond);
     }
     
     private void CheckDamage()
@@ -139,12 +133,12 @@ public class Raycaster : MonoBehaviour
         CastRay(out hit);
         if (hit.collider != null)
         {
-            if (hit.collider.gameObject.CompareTag("Block"))
+            if (hit.collider.gameObject.CompareTag(Tags.Block.ToString()))
             {
                 GameObject go = hit.collider.gameObject;
                 go.GetComponent<BlockScript>().TakeDamage(damagePerSecond);
             }
-            else if (hit.collider.gameObject.CompareTag("Enemy"))
+            else if (hit.collider.gameObject.CompareTag(Tags.Enemy.ToString()))
             {
                 DamageEnemy(hit.collider.gameObject);
             }

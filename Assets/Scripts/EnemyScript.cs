@@ -16,6 +16,7 @@ public class EnemyScript : MonoBehaviour
     private Animator anim;
     float health = 20f;
     private bool isDead;
+
     private void Start()
     {
         targetToFollow = GameObject.FindWithTag("Player").transform;

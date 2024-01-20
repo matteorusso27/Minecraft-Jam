@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using static Utils;
 
 public class CraftingHandler : MonoBehaviour
 {
@@ -30,9 +31,9 @@ public class CraftingHandler : MonoBehaviour
     private bool isCoalActive;
     private bool isClosing;
 
-    private static List<string> recipe1 = new List<string>{ "CobbleStoneDrop","WoodDrop","CoalDrop"};
+    private static List<InventoryItem> recipe1 = new List<InventoryItem> { InventoryItem.CobbleStone, InventoryItem.Wood, InventoryItem.Coal};
     private static int[] quantities1 = new int[] { 5,5,5 };
-    private static List<string> recipe2 = new List<string>{ "CobbleStoneDrop","WoodDrop","GrassDrop"};
+    private static List<InventoryItem> recipe2 = new List<InventoryItem> { InventoryItem.CobbleStone, InventoryItem.Wood, InventoryItem .Grass};
 
     void Start()
     {
@@ -41,15 +42,15 @@ public class CraftingHandler : MonoBehaviour
 
     private void SetInitialState()
     {
-        pnlCrafting = GameObject.FindGameObjectWithTag("CraftingPanel");
+        pnlCrafting = GameObject.FindGameObjectWithTag(Tags.CraftingPanel.ToString());
         if (pnlCrafting == null)
         {
             pnlCraftingReference.SetActive(true);
             pnlCrafting = pnlCraftingReference;
         } 
         //pnlCrafting = pnlCraftingReference;
-        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<CollectorScript>().inventory;
-        result_slot = GameObject.FindGameObjectWithTag("ResultCrafting_Slot");
+        inventory = GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<CollectorScript>().inventory;
+        result_slot = GameObject.FindGameObjectWithTag(Tags.ResultCrafting_Slot.ToString());
         helpText = GameObject.Find("HelpText").GetComponent<Text>();
 
         left_slots = new GameObject[dimension + dimension];
@@ -57,11 +58,11 @@ public class CraftingHandler : MonoBehaviour
 
         for (int i = 0; i < left_slots.Length; i++)
         {
-            left_slots[i] = GameObject.FindGameObjectsWithTag("Left_Crafting_Slot")[i];
+            left_slots[i] = GameObject.FindGameObjectsWithTag(Tags.Left_Crafting_Slot.ToString())[i];
 
             //right slots are less
             if (i < 3)
-                right_slots[i] = GameObject.FindGameObjectsWithTag("Right_Crafting_Slot")[i];
+                right_slots[i] = GameObject.FindGameObjectsWithTag(Tags.Right_Crafting_Slot.ToString())[i];
         }
 
         isPaused = false;
@@ -72,7 +73,7 @@ public class CraftingHandler : MonoBehaviour
         isClosing = false;
         pnlCrafting.SetActive(false);
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q) && !isPaused && !isClosing)
@@ -108,7 +109,7 @@ public class CraftingHandler : MonoBehaviour
 
         newPnlCrafting.GetComponent<RectTransform>().offsetMin = new Vector2(100, 100);
         newPnlCrafting.GetComponent<RectTransform>().offsetMax = new Vector2(-100, -100);
-        newPnlCrafting.gameObject.tag = "CraftingPanel";
+        newPnlCrafting.gameObject.tag = Tags.CraftingPanel.ToString();
         newPnlCrafting.transform.SetAsLastSibling();
         newPnlCrafting.SetActive(true);
         pnlCraftingReference = newPnlCrafting;
@@ -123,7 +124,7 @@ public class CraftingHandler : MonoBehaviour
             if (isSlotEmpty(left_slots[i]))
             {
                 //Find the first non zero quantity element
-                foreach (KeyValuePair<string, int> pair in inventory.GetStoredBlocks())
+                foreach (KeyValuePair<InventoryItem, int> pair in inventory.GetStoredBlocks())
                 {
                     if (pair.Value > 0)
                     {
@@ -147,32 +148,32 @@ public class CraftingHandler : MonoBehaviour
 
     //Convert drop name in the inventory dictionary into the texture name
     // it return the texture to add in the slot or null if the texture is already in the slot
-    private Texture2D ConvertDropToTexture(string text)
+    private Texture2D ConvertDropToTexture(InventoryItem text)
     {
         switch (text)
         {
-            case "CobbleStoneDrop":
+            case InventoryItem.CobbleStone:
                 if (!isCobbleStoneActive)
                 {
                     isCobbleStoneActive = true;
                     return cobbleStoneTexture;
                 }
                 return null;
-            case "WoodDrop":
+            case InventoryItem.Wood:
                 if (!isWoodActive)
                 {
                     isWoodActive = true;
                     return woodTexture;
                 }
                 return null;
-            case "GrassDrop":
+            case InventoryItem.Grass:
                 if (!isGrassActive)
                 {
                     isGrassActive = true;
                     return grassTexture;
                 }
                 return null;
-            case "CoalDrop":
+            case InventoryItem.Coal:
                 if (!isCoalActive)
                 {
                     isCoalActive = true;
@@ -184,16 +185,10 @@ public class CraftingHandler : MonoBehaviour
         }
     }
 
-    private bool isSlotEmpty(GameObject slot)
-    {
-        if (!slot.transform.GetChild(0).GetComponent<RawImage>().texture) return true;
-        return false;
-    }
-
-
+    private bool isSlotEmpty(GameObject slot) => !slot.transform.GetChild(0).GetComponent<RawImage>().texture ? true : false;
     private void CheckRecipe()
     {
-        List<string> input_recipe = new List<string>();
+        List<InventoryItem> input_recipe = new List<InventoryItem>();
         for (int i = 0; i < right_slots.Length; i++)
         {
             if (right_slots[i].transform.childCount > 0)
@@ -201,7 +196,6 @@ public class CraftingHandler : MonoBehaviour
                 string tex = right_slots[i].transform.GetChild(0).gameObject.GetComponent<RawImage>().texture.name;
                 input_recipe.Add(ConvertTextureToDrop(tex));
             }
-
         }
         //check if the provided materials form a recipe
         if (input_recipe.OrderBy(i => i).SequenceEqual(recipe1.OrderBy(i => i)))
@@ -220,9 +214,8 @@ public class CraftingHandler : MonoBehaviour
                         sonColor.a = 1f;
                         rawImgSon.color = sonColor;
                         helpText.text = "That's how it's done! You got a Pike! The UI will now close to let you play";
-                        inventory.IncrementItem("Pike");
+                        inventory.IncrementItem(InventoryItem.Pike);
                         StartCoroutine(CloseUI());
-
                     }
                 }
             }
@@ -230,8 +223,6 @@ public class CraftingHandler : MonoBehaviour
             {
                 helpText.text = "Quantites are not enough to create the recipe";
             }
-            
-
         }
         else
         {
@@ -240,7 +231,7 @@ public class CraftingHandler : MonoBehaviour
 
     }
 
-    private bool AreMaterialsEnough(List<string> recipe, int[] quantities)
+    private bool AreMaterialsEnough(List<InventoryItem> recipe, int[] quantities)
     {
         for (int i = 0; i < recipe.Count; i++)
         {
@@ -261,20 +252,20 @@ public class CraftingHandler : MonoBehaviour
         
     }
     //Da mettere in una classe statica
-    private string ConvertTextureToDrop(string text)
+    private InventoryItem ConvertTextureToDrop(string text)
     {
         switch (text)
         {
             case "CobbleStoneBlockIcon":
-                return "CobbleStoneDrop";
+                return InventoryItem.CobbleStone;
             case "WoodBlockIcon":
-                return "WoodDrop";
+                return InventoryItem.Wood;
             case "GrassBlockIcon":
-                return "GrassDrop";
+                return InventoryItem.Grass;
             case "CoalBlockIcon":
-                return "CoalDrop";
+                return InventoryItem.Coal;
             default:
-                return null;
+                return InventoryItem.None;
         }
     }
     //Game Pause Management
@@ -298,14 +289,10 @@ public class CraftingHandler : MonoBehaviour
         }
        
         pnlCrafting.SetActive(isPaused);
-        GameObject.FindGameObjectWithTag("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isPaused);
+        GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isPaused);
     }
 
-    public bool isGamePaused()
-    {
-        return isPaused;
-    }
-
+    public bool isGamePaused() => isPaused;
     private IEnumerator CloseUI()
     {
         isClosing = true;
