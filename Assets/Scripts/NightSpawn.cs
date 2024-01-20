@@ -8,26 +8,25 @@ public class NightSpawn : MonoBehaviour
     public float rotationSpeed = 8f;
     private float dropHeight = 7f;
     private float timeIntervalToSpawn = 5f;
-    public bool night;
 
     private List<GameObject> spawnedSpiders;
     private void Start()
     {
         spawnedSpiders = new List<GameObject>();
-        StartCoroutine(SpawnEnemyCoRoutine());
+        StartCoroutine(SpawnEnemyCoroutine());
     }
     void Update()
     {
         ChangeTime();
-        night = IsNight();
-        KillSpiders();
+        if (!IsNight())
+            KillSpiders();
     }
 
     private void ChangeTime()
     {
         transform.Rotate(Vector3.right * Time.deltaTime * rotationSpeed);
     }
-    IEnumerator SpawnEnemyCoRoutine()
+    IEnumerator SpawnEnemyCoroutine()
     {
         while (true)
         {
@@ -51,7 +50,7 @@ public class NightSpawn : MonoBehaviour
 
     private void KillSpiders()
     {
-        if(spawnedSpiders.Count > 0 && !IsNight())
+        if(spawnedSpiders.Count > 0)
         {
             foreach (GameObject spider in spawnedSpiders)
             {
