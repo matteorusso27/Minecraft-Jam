@@ -29,11 +29,10 @@ public class CraftingHandler : MonoBehaviour
     private bool isWoodActive;
     private bool isCobbleStoneActive;
     private bool isCoalActive;
-    private bool isClosing;
 
     private static List<InventoryItem> recipe1 = new List<InventoryItem> { InventoryItem.CobbleStone, InventoryItem.Wood, InventoryItem.Coal};
     private static int[] quantities1 = new int[] { 5,5,5 };
-    private static List<InventoryItem> recipe2 = new List<InventoryItem> { InventoryItem.CobbleStone, InventoryItem.Wood, InventoryItem .Grass};
+    private static List<InventoryItem> recipe2 = new List<InventoryItem> { InventoryItem.CobbleStone, InventoryItem.Wood, InventoryItem.Grass};
 
     void Start()
     {
@@ -57,49 +56,22 @@ public class CraftingHandler : MonoBehaviour
 
         for (int i = 0; i < left_slots.Length; i++)
         {
-            left_slots[i] = GameObject.FindGameObjectsWithTag(Tags.Left_Crafting_Slot.ToString())[i];
+            left_slots[i] = FindGameObjectsWithTag(Tags.Left_Crafting_Slot)[i];
 
             //right slots are less
             if (i < 3)
-                right_slots[i] = GameObject.FindGameObjectsWithTag(Tags.Right_Crafting_Slot.ToString())[i];
+                right_slots[i] = FindGameObjectsWithTag(Tags.Right_Crafting_Slot)[i];
         }
 
-        isPaused = false;
         isGrassActive = false;
         isWoodActive = false;
         isCobbleStoneActive = false;
         isCoalActive = false;
-        isClosing = false;
         pnlCrafting.SetActive(false);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q) && !isPaused && !isClosing)
-        {
-            //Clear slots
-            //ClearSlots();
-
-            //Change game pause state
-            ChangePauseStatus();
-
-            //Fill the left slots with the inventory items
-            FillLeftSlotsWithInventory();
-        }
-        else if (Input.GetKeyDown(KeyCode.Q) && isPaused && !isClosing)
-        {
-            ChangePauseStatus();
-            DestroyAndCreate();
-            
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            CheckRecipe();
-        }
-    }
-
     //New panel 
-    private void DestroyAndCreate()
+    public void DestroyAndCreate(out GameObject newPnlReference)
     {
         Destroy(pnlCrafting);
         GameObject newPnlCrafting = Instantiate(pnlCraftingPrefab);
@@ -112,10 +84,11 @@ public class CraftingHandler : MonoBehaviour
         newPnlCrafting.transform.SetAsLastSibling();
         newPnlCrafting.SetActive(true);
         pnlCraftingReference = newPnlCrafting;
+        newPnlReference = newPnlCrafting;
         SetInitialState();
     }
 
-    private void FillLeftSlotsWithInventory()
+    public void FillLeftSlotsWithInventory()
     {
         for (int i = 0; i < left_slots.Length; i++)
         {
@@ -147,7 +120,7 @@ public class CraftingHandler : MonoBehaviour
 
     //Convert drop name in the inventory dictionary into the texture name
     // it return the texture to add in the slot or null if the texture is already in the slot
-    private Texture2D ConvertDropToTexture(InventoryItem text)
+    public Texture2D ConvertDropToTexture(InventoryItem text)
     {
         switch (text)
         {
@@ -185,7 +158,7 @@ public class CraftingHandler : MonoBehaviour
     }
 
     private bool isSlotEmpty(GameObject slot) => !slot.transform.GetChild(0).GetComponent<RawImage>().texture ? true : false;
-    private void CheckRecipe()
+    public bool CheckRecipe()
     {
         List<InventoryItem> input_recipe = new List<InventoryItem>();
         for (int i = 0; i < right_slots.Length; i++)
@@ -214,20 +187,22 @@ public class CraftingHandler : MonoBehaviour
                         rawImgSon.color = sonColor;
                         helpText.text = "That's how it's done! You got a Pike! The UI will now close to let you play";
                         inventory.IncrementItem(InventoryItem.Pike);
-                        StartCoroutine(CloseUI());
+                        return true;
                     }
                 }
             }
             else
             {
                 helpText.text = "Quantites are not enough to create the recipe";
+                return false;
             }
         }
         else
         {
             helpText.text = "Not a correct combination... Try another recipe and press R";
+            return false;
         }
-
+        return false;
     }
 
     private bool AreMaterialsEnough(List<InventoryItem> recipe, int[] quantities)
@@ -249,58 +224,5 @@ public class CraftingHandler : MonoBehaviour
         }
         return true;
         
-    }
-    //Da mettere in una classe statica
-    private InventoryItem ConvertTextureToDrop(string text)
-    {
-        switch (text)
-        {
-            case "CobbleStoneBlockIcon":
-                return InventoryItem.CobbleStone;
-            case "WoodBlockIcon":
-                return InventoryItem.Wood;
-            case "GrassBlockIcon":
-                return InventoryItem.Grass;
-            case "CoalBlockIcon":
-                return InventoryItem.Coal;
-            default:
-                return InventoryItem.None;
-        }
-    }
-    //Game Pause Management
-    public void ChangePauseStatus()
-    {
-        isPaused = !isPaused;
-        UpdateGamePause();
-    }
-
-    void UpdateGamePause()
-    {
-        if (isPaused)
-        {
-            //Stop time
-            Time.timeScale = 0;
-        }
-        else
-        {
-            //Reactivate time
-            Time.timeScale = 1;
-        }
-       
-        pnlCrafting.SetActive(isPaused);
-        GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isPaused);
-    }
-
-    public bool isGamePaused() => isPaused;
-    private IEnumerator CloseUI()
-    {
-        isClosing = true;
-        pnlCrafting.GetComponent<Image>().raycastTarget = false;
-        Time.timeScale = 1;
-        yield return new WaitForSeconds(3f);
-
-        ChangePauseStatus();
-        DestroyAndCreate();
-        StopCoroutine(CloseUI());
     }
 }

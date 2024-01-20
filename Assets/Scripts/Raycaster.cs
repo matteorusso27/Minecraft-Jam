@@ -13,6 +13,7 @@ public class Raycaster : MonoBehaviour
 
     private UpdateLowBar lowBarScript;
     [SerializeField] private CraftingHandler craftingHandler;
+    [SerializeField] public GameStateHandler gameStateHandler;
 
     [SerializeField] GameObject grassPrefab;
     [SerializeField] GameObject cobbleStonePrefab;
@@ -22,7 +23,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] GameObject pike;
 
     private Animator armAnimator;
-    public bool isGamePaused => craftingHandler.isGamePaused();
+    public bool isGamePaused => gameStateHandler.IsPaused;
     private bool isPikeActive => pike.activeInHierarchy;
 
     private float damagePerSecond = 10;

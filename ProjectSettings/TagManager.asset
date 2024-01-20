@@ -24,6 +24,7 @@ TagManager:
   - BigEnvironment
   - PickObjectManager
   - DamagePlayer
+  - GameStateHandler
   layers:
   - Default
   - TransparentFX
