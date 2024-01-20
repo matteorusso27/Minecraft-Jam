@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static Utils;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class EnemyScript : MonoBehaviour
     {
         targetToFollow = GameObject.FindWithTag("Player").transform;
         anim = GetComponent<Animator>();
-        damageSoundPlayer = GameObject.FindGameObjectWithTag("DamagePlayer").GetComponent<AudioSource>();
+        damageSoundPlayer = FindGameObjectWithTag(Tags.DamagePlayer).GetComponent<AudioSource>();
     }
 
     void Update()

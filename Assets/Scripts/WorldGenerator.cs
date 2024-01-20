@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using static Utils;
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class WorldGenerator : MonoBehaviour
                 }
 
                 GameObject grass = Instantiate(toInstantiate, new Vector3(x, y, z), Quaternion.identity);
-                grass.transform.SetParent(GameObject.FindGameObjectWithTag("Environment").transform);
+                grass.transform.SetParent(FindGameObjectWithTag(Tags.Environment).transform);
             }
     }
 }

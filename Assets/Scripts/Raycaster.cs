@@ -30,8 +30,8 @@ public class Raycaster : MonoBehaviour
     private float pikeDamage = 130f;
     private void Start()
     {
-        lowBarScript = GameObject.FindGameObjectWithTag(Tags.LowBar.ToString()).GetComponent<UpdateLowBar>();
-        GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
+        lowBarScript = FindGameObjectWithTag(Tags.LowBar).GetComponent<UpdateLowBar>();
+        FindGameObjectWithTag(Tags.Player).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
         armAnimator = GameObject.Find("Arm").GetComponent<Animator>();
     }
 

@@ -20,7 +20,11 @@ public static class Utils
         LowBar,
         CraftManager,
         CraftingPanel,
-        ResultCrafting_Slot
+        ResultCrafting_Slot,
+        PickObjectManager,
+        BigEnvironment,
+        Environment,
+        GameStateHandler
     }
 
     public enum InventoryItem
@@ -37,5 +41,24 @@ public static class Utils
     {
         PlayMode,
         CraftingMode
+    }
+
+    public static GameObject FindGameObjectWithTag(Tags tag) => GameObject.FindGameObjectWithTag(tag.ToString());
+    public static GameObject[] FindGameObjectsWithTag(Tags tag) => GameObject.FindGameObjectsWithTag(tag.ToString());
+    public static InventoryItem ConvertTextureToDrop(string text)
+    {
+        switch (text)
+        {
+            case "CobbleStoneBlockIcon":
+                return InventoryItem.CobbleStone;
+            case "WoodBlockIcon":
+                return InventoryItem.Wood;
+            case "GrassBlockIcon":
+                return InventoryItem.Grass;
+            case "CoalBlockIcon":
+                return InventoryItem.Coal;
+            default:
+                return InventoryItem.None;
+        }
     }
 }

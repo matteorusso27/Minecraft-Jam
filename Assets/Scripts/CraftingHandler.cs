@@ -42,15 +42,14 @@ public class CraftingHandler : MonoBehaviour
 
     private void SetInitialState()
     {
-        pnlCrafting = GameObject.FindGameObjectWithTag(Tags.CraftingPanel.ToString());
+        pnlCrafting = FindGameObjectWithTag(Tags.CraftingPanel);
         if (pnlCrafting == null)
         {
             pnlCraftingReference.SetActive(true);
             pnlCrafting = pnlCraftingReference;
         } 
-        //pnlCrafting = pnlCraftingReference;
-        inventory = GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<CollectorScript>().inventory;
-        result_slot = GameObject.FindGameObjectWithTag(Tags.ResultCrafting_Slot.ToString());
+        inventory = FindGameObjectWithTag(Tags.Player).GetComponent<CollectorScript>().inventory;
+        result_slot = FindGameObjectWithTag(Tags.ResultCrafting_Slot);
         helpText = GameObject.Find("HelpText").GetComponent<Text>();
 
         left_slots = new GameObject[dimension + dimension];

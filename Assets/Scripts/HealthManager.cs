@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Utils;
 
 public class HealthManager: MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class HealthManager: MonoBehaviour
     [SerializeField] GameObject pnlDeath;
     private float timeToHeal = 7f;
 
+    IEnumerator HealCoroutine = null;
     private float currentHealthPercentage
     {
         get
@@ -23,7 +25,6 @@ public class HealthManager: MonoBehaviour
     {
         currentHealth = maxHealth;
         slider.fillRect.GetComponent<Image>().color = Color.green;
-        StartCoroutine(IncrementHealth());
     }
     void Update()
     {
@@ -37,7 +38,7 @@ public class HealthManager: MonoBehaviour
         if(currentHealthPercentage < 0.5f) slider.fillRect.GetComponent<Image>().color = Color.yellow;
         if(currentHealthPercentage < 0.2f) slider.fillRect.GetComponent<Image>().color = Color.red;
         if (currentHealthPercentage <= 0f) {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(false);
+            FindGameObjectWithTag(Tags.Player).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(false);
             GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().enabled = false;
             pnlDeath.SetActive(true);
         }
@@ -46,6 +47,11 @@ public class HealthManager: MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        if (HealCoroutine == null)
+        {
+            HealCoroutine = IncrementHealth();
+            StartCoroutine(HealCoroutine);
+        }
     }
 
     IEnumerator IncrementHealth()
@@ -56,6 +62,8 @@ public class HealthManager: MonoBehaviour
             if(currentHealth >= maxHealth)
             {
                 currentHealth = maxHealth;
+                StopCoroutine(HealCoroutine);
+                HealCoroutine = null;
             }
             yield return new WaitForSeconds(timeToHeal);
         }

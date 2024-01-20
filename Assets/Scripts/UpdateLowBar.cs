@@ -29,7 +29,7 @@ public class UpdateLowBar : MonoBehaviour
 
     private void Start()
     {
-        inventory = GameObject.FindGameObjectWithTag(Tags.Player.ToString()).GetComponent<CollectorScript>().inventory;
+        inventory = FindGameObjectWithTag(Tags.Player).GetComponent<CollectorScript>().inventory;
         slots = new GameObject[dimension];
         highlights = new GameObject[dimension];
         texts = new GameObject[dimension];

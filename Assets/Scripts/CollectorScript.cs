@@ -10,7 +10,7 @@ public class CollectorScript : MonoBehaviour
     private AudioSource pickupSoundManager;
     private void Awake()
     {
-        pickupSoundManager = GameObject.FindGameObjectWithTag("PickObjectManager").GetComponent<AudioSource>();
+        pickupSoundManager = FindGameObjectWithTag(Tags.PickObjectManager).GetComponent<AudioSource>();
         inventory = new Inventory();
     }
 
