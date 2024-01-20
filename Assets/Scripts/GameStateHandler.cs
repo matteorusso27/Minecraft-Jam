@@ -49,8 +49,6 @@ public class GameStateHandler : MonoBehaviour
             if (CraftingHandler.CheckRecipe())
                 StartCoroutine(CloseUI());
         }
-
-        Debug.Log(currentState+"\n");
     }
 
     //Game Pause Management
