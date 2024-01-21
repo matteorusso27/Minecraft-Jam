@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class LowBar : MonoBehaviour
     [SerializeField] private Texture2D blankTexture;
     [SerializeField] private Texture2D pikeTexture;
 
+    private List<InventoryItem> placedIcons;
     private bool isGrassTexture;
     private bool isCobbleStoneTexture;
     private bool isWoodTexture;
@@ -36,14 +38,13 @@ public class LowBar : MonoBehaviour
         slots = new GameObject[dimension];
         highlights = new GameObject[dimension];
         texts = new GameObject[dimension];
-
+        placedIcons = new List<InventoryItem>();
         for (int i = 0; i < slots.Length; i++)
         {
             slots[i] = FindByName("Slot" + (i+1).ToString());
             highlights[i] = FindByName("Highlight" + (i+1).ToString());
             texts[i] = FindByName("Text" + (i+1).ToString());
         }
-        
     }
 
     private void Update()
@@ -74,109 +75,59 @@ public class LowBar : MonoBehaviour
         
     }
 
-    private bool isTextureBlank(GameObject gobject) => gobject.GetComponent<RawImage>().texture.name == "Blank" ? true : false;
+    private bool IsTextureBlank(GameObject gobject) => gobject.GetComponent<RawImage>().texture.name == "Blank" ? true : false;
 
     private void UpdateIcons()
     {
         foreach (KeyValuePair<InventoryItem, int> item in inventory.GetStoredBlocks())
         {
-            //Add icons
-            if(item.Value != 0)
+            if (item.Value > 0)
             {
-                switch (item.Key)
-                {
-                    case InventoryItem.CobbleStone:
-
-                        if (!isCobbleStoneTexture)
-                        {
-                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = cobbleStoneTexture;
-                            isCobbleStoneTexture = true;
-                        }
-                        break;
-                    case InventoryItem.Wood:
-
-                        if (!isWoodTexture)
-                        {
-                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = woodTexture;
-                            isWoodTexture = true;
-                        }
-                        break;
-                    case InventoryItem.Grass:
-
-                        if (!isGrassTexture)
-                        {
-                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = grassTexture;
-                            isGrassTexture = true;
-                        }
-                        break;
-                   case InventoryItem.Coal:
-
-                        if (!isCoalTexture)
-                        {
-                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = coalTexture;
-                            isCoalTexture = true;
-                        }
-                        break;
-
-                   case InventoryItem.Pike:
-                        if (!isPikeTexture)
-                        {
-                            slots[FindEmptySlot()].GetComponent<RawImage>().texture = pikeTexture;
-                            isPikeTexture = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                AddIcon(item.Key);
             }
             else
             {
-                switch (item.Key)
-                {
-                    case InventoryItem.CobbleStone:
-                        if (isCobbleStoneTexture)
-                        {
-                            slots[FindSlot("CobbleStoneBlockIcon")].GetComponent<RawImage>().texture = blankTexture;
-                            isCobbleStoneTexture = !isCobbleStoneTexture;
-                        }
-                            
-                        break;
-                    case InventoryItem.Wood:
-                        if (isWoodTexture)
-                        {
-                            slots[FindSlot("WoodBlockIcon")].GetComponent<RawImage>().texture = blankTexture;
-                            isWoodTexture = !isWoodTexture;
-                        }
-                            
-                        break;
-                    case InventoryItem.Grass:
-                        if (isGrassTexture)
-                        {
-                            slots[FindSlot("GrassBlockIcon")].GetComponent<RawImage>().texture = blankTexture;
-                            isGrassTexture = !isGrassTexture;
-                        }
-                            
-                        break;
-                    case InventoryItem.Coal:
-                        if (isCoalTexture)
-                        {
-                            slots[FindSlot("CoalBlockIcon")].GetComponent<RawImage>().texture = blankTexture;
-                            isCoalTexture = !isCoalTexture;
-                        }
-                            
-                        break;
-                    case InventoryItem.Pike:
-                        if (isPikeTexture)
-                        {
-                            slots[FindSlot("Pike")].GetComponent<RawImage>().texture = blankTexture;
-                            isPikeTexture = !isPikeTexture;
-                        }
-
-                        break;
-                    default:
-                        break;
-                }
+                RemoveIcon(item.Key);
             }
+        }
+    }
+    private Texture2D ItemToTexture(InventoryItem item)
+    {
+        switch (item)
+        {
+            case InventoryItem.Grass:
+                return grassTexture;
+            case InventoryItem.Coal:
+                return coalTexture;
+            case InventoryItem.CobbleStone:
+                return coalTexture;
+            case InventoryItem.Wood:
+                return woodTexture;
+            case InventoryItem.Pike:
+                return pikeTexture;
+            default:
+                return blankTexture;
+        }
+    }
+    private void AddIcon(InventoryItem item)
+    {
+        if (!placedIcons.Contains(item))
+        {
+            int emptySlotIdx = FindEmptySlot();
+            if (emptySlotIdx == -1) return;
+            slots[emptySlotIdx].GetComponent<RawImage>().texture = ItemToTexture(item);
+            placedIcons.Add(item);
+        }
+    }
+
+    private void RemoveIcon(InventoryItem item)
+    {
+        if (placedIcons.Contains(item))
+        {
+            int findSlotIdx = FindSlot(item.ToString() + "Icon");
+            if (findSlotIdx == -1) return;
+            slots[findSlotIdx].GetComponent<RawImage>().texture = blankTexture;
+            placedIcons.Remove(item);
         }
     }
 
@@ -184,7 +135,7 @@ public class LowBar : MonoBehaviour
     {
         for(int i = 0; i < slots.Length; i++)
         {
-            if (isTextureBlank(slots[i])) return i;
+            if (IsTextureBlank(slots[i])) return i;
         }
 
         return -1;
@@ -216,32 +167,15 @@ public class LowBar : MonoBehaviour
             if (i == currentHighlightIndex)
             {
                 string textName = slots[i].GetComponent<RawImage>().texture.name;
-                var dropType = ConvertTextureToDrop(textName);
-                if (inventory.GetQuantity(dropType) > 0)
+                var item = ConvertTextureToItem(textName);
+                if (inventory.GetQuantity(item) > 0)
                 {
-                    inventory.DecrementItem(dropType);
+                    inventory.DecrementItem(item);
                     return textName;
                 }
             }
         }
         return null;
-    }
-
-    private InventoryItem ConvertTextureToDrop(string text)
-    {
-        switch (text)
-        {
-            case "CobbleStoneBlockIcon":
-                return InventoryItem.CobbleStone;
-            case "WoodBlockIcon":
-                return InventoryItem.Wood;
-            case "GrassBlockIcon":
-                return InventoryItem.Grass;
-            case "CoalBlockIcon":
-                return InventoryItem.Coal;
-            default:
-                return InventoryItem.None;
-        }
     }
 
     private void UpdateText()
@@ -253,7 +187,7 @@ public class LowBar : MonoBehaviour
                 {
                     case InventoryItem.CobbleStone:
                         
-                        int slotIndex = FindSlot("CobbleStoneBlockIcon");
+                        int slotIndex = FindSlot("CobbleStoneIcon");
                         if (slotIndex != -1)
                         {
                              texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
@@ -262,7 +196,7 @@ public class LowBar : MonoBehaviour
 
                     case InventoryItem.Wood:
 
-                        slotIndex = FindSlot("WoodBlockIcon");
+                        slotIndex = FindSlot("WoodIcon");
                         if (slotIndex != -1)
                         {
                             texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
@@ -271,7 +205,7 @@ public class LowBar : MonoBehaviour
                     break;
                     case InventoryItem.Grass:
 
-                        slotIndex = FindSlot("GrassBlockIcon");
+                        slotIndex = FindSlot("GrassIcon");
                         if (slotIndex != -1)
                         {
                             texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
@@ -280,7 +214,7 @@ public class LowBar : MonoBehaviour
 
                     case InventoryItem.Coal:
 
-                        slotIndex = FindSlot("CoalBlockIcon");
+                        slotIndex = FindSlot("CoalIcon");
                         if (slotIndex != -1)
                         {
                             texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
@@ -296,7 +230,7 @@ public class LowBar : MonoBehaviour
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (isTextureBlank(slots[i]) || slots[i].GetComponent<RawImage>().texture.name == "Pike")
+            if (IsTextureBlank(slots[i]) || slots[i].GetComponent<RawImage>().texture.name == "PikeIcon")
                 texts[i].GetComponent<Text>().text = string.Empty;
         }
     }

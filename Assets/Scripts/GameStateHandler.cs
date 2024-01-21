@@ -76,7 +76,7 @@ public class GameStateHandler : MonoBehaviour
             }
             Raycaster.armAnimator.SetBool("isDestroying", isRightClick);
         }
-        Raycaster.pike.SetActive(Raycaster.lowBarScript.IsHighlighted("Pike"));
+        Raycaster.pike.SetActive(Raycaster.lowBarScript.IsHighlighted("PikeIcon"));
     }
     void UpdateGamePause()
     {

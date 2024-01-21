@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,20 +48,9 @@ public static class Utils
     public static GameObject FindGameObjectWithTag(Tags tag) => GameObject.FindGameObjectWithTag(tag.ToString());
     public static GameObject[] FindGameObjectsWithTag(Tags tag) => GameObject.FindGameObjectsWithTag(tag.ToString());
     public static GameObject FindByName(string name) => GameObject.Find(name);
-    public static InventoryItem ConvertTextureToDrop(string text)
+    public static InventoryItem ConvertTextureToItem(string text)
     {
-        switch (text)
-        {
-            case "CobbleStoneBlockIcon":
-                return InventoryItem.CobbleStone;
-            case "WoodBlockIcon":
-                return InventoryItem.Wood;
-            case "GrassBlockIcon":
-                return InventoryItem.Grass;
-            case "CoalBlockIcon":
-                return InventoryItem.Coal;
-            default:
-                return InventoryItem.None;
-        }
+        Enum.TryParse(text.Replace("Icon",""), out InventoryItem item);
+        return item;
     }
 }

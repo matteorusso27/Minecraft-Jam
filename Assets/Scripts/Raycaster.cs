@@ -115,16 +115,16 @@ public class Raycaster : MonoBehaviour
         string activeTex = lowBarScript.FindHighlightBlockToBuild();
         switch (activeTex)
         {
-            case "CobbleStoneBlockIcon":
+            case "CobbleStoneIcon":
                 gObject = cobbleStonePrefab;
                 return;
-            case "WoodBlockIcon":
+            case "WoodIcon":
                 gObject = woodPrefab;
                 return;
-            case "GrassBlockIcon":
+            case "GrassIcon":
                 gObject = grassPrefab;
                 return;
-            case "CoalBlockIcon":
+            case "CoalIcon":
                 gObject = coalPrefab;
                 return;
             default:

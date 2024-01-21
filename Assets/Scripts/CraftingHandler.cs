@@ -159,7 +159,7 @@ public class CraftingHandler : MonoBehaviour
             if (right_slots[i].transform.childCount > 0)
             {
                 string tex = right_slots[i].transform.GetChild(0).gameObject.GetComponent<RawImage>().texture.name;
-                input_recipe.Add(ConvertTextureToDrop(tex));
+                input_recipe.Add(ConvertTextureToItem(tex));
             }
         }
         //check if the provided materials form a recipe
