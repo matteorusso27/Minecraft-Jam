@@ -36,9 +36,9 @@ public class LowBar : MonoBehaviour
 
         for (int i = 0; i < slots.Length; i++)
         {
-            slots[i] = GameObject.Find("Slot" + (i+1).ToString());
-            highlights[i] = GameObject.Find("Highlight" + (i+1).ToString());
-            texts[i] = GameObject.Find("Text" + (i+1).ToString());
+            slots[i] = FindByName("Slot" + (i+1).ToString());
+            highlights[i] = FindByName("Highlight" + (i+1).ToString());
+            texts[i] = FindByName("Text" + (i+1).ToString());
         }
         
     }

@@ -46,7 +46,7 @@ public class CraftingHandler : MonoBehaviour
         } 
         inventory = FindGameObjectWithTag(Tags.Player).GetComponent<CollectorScript>().inventory;
         result_slot = FindGameObjectWithTag(Tags.ResultCrafting_Slot);
-        helpText = GameObject.Find("HelpText").GetComponent<Text>();
+        helpText = FindByName("HelpText").GetComponent<Text>();
 
         left_slots = new GameObject[dimension + dimension];
         right_slots = new GameObject[dimension];
@@ -69,7 +69,7 @@ public class CraftingHandler : MonoBehaviour
         Destroy(pnlCrafting);
         GameObject newPnlCrafting = Instantiate(pnlCraftingPrefab);
 
-        newPnlCrafting.transform.SetParent(GameObject.Find("UI").transform);
+        newPnlCrafting.transform.SetParent(FindByName("UI").transform);
 
         newPnlCrafting.GetComponent<RectTransform>().offsetMin = new Vector2(100, 100);
         newPnlCrafting.GetComponent<RectTransform>().offsetMax = new Vector2(-100, -100);

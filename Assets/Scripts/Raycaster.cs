@@ -33,7 +33,7 @@ public class Raycaster : MonoBehaviour
     {
         lowBarScript = FindGameObjectWithTag(Tags.LowBar).GetComponent<LowBar>();
         FindGameObjectWithTag(Tags.Player).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
-        armAnimator = GameObject.Find("Arm").GetComponent<Animator>();
+        armAnimator = FindByName("Arm").GetComponent<Animator>();
     }
 
     private void CastRay(out RaycastHit hit)

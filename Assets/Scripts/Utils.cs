@@ -46,6 +46,7 @@ public static class Utils
 
     public static GameObject FindGameObjectWithTag(Tags tag) => GameObject.FindGameObjectWithTag(tag.ToString());
     public static GameObject[] FindGameObjectsWithTag(Tags tag) => GameObject.FindGameObjectsWithTag(tag.ToString());
+    public static GameObject FindByName(string name) => GameObject.Find(name);
     public static InventoryItem ConvertTextureToDrop(string text)
     {
         switch (text)
