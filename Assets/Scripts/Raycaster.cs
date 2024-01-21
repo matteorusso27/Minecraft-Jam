@@ -79,12 +79,8 @@ public class Raycaster : MonoBehaviour
             {
                 posZ += hit.normal.z;
             }
-
+            
             Instantiate(prefab, new Vector3(posX, posY, posZ), Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogError("Prefab not instantiated");
         }
     }
     
