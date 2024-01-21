@@ -50,7 +50,8 @@ public class Raycaster : MonoBehaviour
         CastRay(out RaycastHit hit);
         //Possibility to create blocks at certain distance
 
-        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag(Tags.Block.ToString()))
+        bool isPikeActive = lowBarScript.IsHighlighted(InventoryItem.Pike);
+        if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag(Tags.Block.ToString()) && !isPikeActive)
         {
             CreateBlock(ref hit);
         }
@@ -64,7 +65,7 @@ public class Raycaster : MonoBehaviour
 
         GameObject prefab;
         prefabToBuild(out prefab);
-        if (prefab && prefab.tag.Equals(Tags.Block.ToString())) // I don't want to build if I handle the pike
+        if (prefab)
         {
             if (hit.normal.x != 0)
             {
@@ -112,19 +113,19 @@ public class Raycaster : MonoBehaviour
     }
     private void prefabToBuild(out GameObject gObject)
     {
-        string activeTex = lowBarScript.FindHighlightBlockToBuild();
+        var activeTex = lowBarScript.FindHighlightBlockToBuild();
         switch (activeTex)
         {
-            case "CobbleStoneIcon":
+            case InventoryItem.CobbleStone:
                 gObject = cobbleStonePrefab;
                 return;
-            case "WoodIcon":
+            case InventoryItem.Wood:
                 gObject = woodPrefab;
                 return;
-            case "GrassIcon":
+            case InventoryItem.Grass:
                 gObject = grassPrefab;
                 return;
-            case "CoalIcon":
+            case InventoryItem.Coal:
                 gObject = coalPrefab;
                 return;
             default:

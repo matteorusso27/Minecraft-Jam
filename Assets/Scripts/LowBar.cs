@@ -25,11 +25,13 @@ public class LowBar : MonoBehaviour
     [SerializeField] private Texture2D pikeTexture;
 
     private List<InventoryItem> placedIcons;
-    private bool isGrassTexture;
-    private bool isCobbleStoneTexture;
-    private bool isWoodTexture;
-    private bool isCoalTexture;
-    private bool isPikeTexture;
+
+    public Texture2D GrassTexture { get => grassTexture;}
+    public Texture2D CobbleStoneTexture { get => cobbleStoneTexture;}
+    public Texture2D WoodTexture { get => woodTexture;}
+    public Texture2D CoalTexture { get => coalTexture;}
+    public Texture2D PikeTexture { get => pikeTexture;}
+    public Texture2D BlankTexture { get => blankTexture;}
 
     private void Start()
     {
@@ -91,22 +93,22 @@ public class LowBar : MonoBehaviour
             }
         }
     }
-    private Texture2D ItemToTexture(InventoryItem item)
+    public Texture2D ItemToTexture(InventoryItem item)
     {
         switch (item)
         {
             case InventoryItem.Grass:
-                return grassTexture;
+                return GrassTexture;
             case InventoryItem.Coal:
-                return coalTexture;
+                return CoalTexture;
             case InventoryItem.CobbleStone:
-                return coalTexture;
+                return CobbleStoneTexture;
             case InventoryItem.Wood:
-                return woodTexture;
+                return WoodTexture;
             case InventoryItem.Pike:
-                return pikeTexture;
+                return PikeTexture;
             default:
-                return blankTexture;
+                return BlankTexture;
         }
     }
     private void AddIcon(InventoryItem item)
@@ -154,13 +156,15 @@ public class LowBar : MonoBehaviour
         return -1;
     }
 
+    public bool IsHighlighted(InventoryItem item) => IsHighlighted(item.ToString());
+
     public bool IsHighlighted(string textName)
     {
         var slot = FindSlot(textName);
         return slot == currentHighlightIndex;
     }
 
-    public string FindHighlightBlockToBuild()
+    public InventoryItem FindHighlightBlockToBuild()
     {
         for (int i = 0; i < slots.Length; i++)
         {
@@ -171,59 +175,29 @@ public class LowBar : MonoBehaviour
                 if (inventory.GetQuantity(item) > 0)
                 {
                     inventory.DecrementItem(item);
-                    return textName;
+                    return item;
                 }
             }
         }
-        return null;
+        return InventoryItem.None;
     }
 
     private void UpdateText()
     {
+        void ChangeTextForItem(InventoryItem item, string textToUpdate)
+        {
+            int slotIndex = FindSlot(item.ToString()+"Icon");
+            if (slotIndex != -1)
+            {
+                texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
+            }
+        }
+
         foreach (KeyValuePair<InventoryItem, int> item in inventory.GetStoredBlocks())
         {
-            int textToUpdate = item.Value;
-                switch (item.Key)
-                {
-                    case InventoryItem.CobbleStone:
-                        
-                        int slotIndex = FindSlot("CobbleStoneIcon");
-                        if (slotIndex != -1)
-                        {
-                             texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
-                        }
-                    break;
-
-                    case InventoryItem.Wood:
-
-                        slotIndex = FindSlot("WoodIcon");
-                        if (slotIndex != -1)
-                        {
-                            texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
-                        }
-
-                    break;
-                    case InventoryItem.Grass:
-
-                        slotIndex = FindSlot("GrassIcon");
-                        if (slotIndex != -1)
-                        {
-                            texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
-                        }
-                    break;
-
-                    case InventoryItem.Coal:
-
-                        slotIndex = FindSlot("CoalIcon");
-                        if (slotIndex != -1)
-                        {
-                            texts[slotIndex].GetComponent<Text>().text = textToUpdate.ToString();
-                        }
-                    break;
-                default:
-                        break;
-                }
+            ChangeTextForItem(item.Key, item.Value.ToString());
         }
+
         ClearText();
     }
     private void ClearText()

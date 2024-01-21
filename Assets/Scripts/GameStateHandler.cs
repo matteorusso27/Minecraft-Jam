@@ -40,18 +40,23 @@ public class GameStateHandler : MonoBehaviour
 
     private void UpdatePauseState()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && CanOpenUI)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            UpdateGamePause();
+            if (CanOpenUI)
+            {
+                UpdateGamePause();
 
-            //Fill the left slots with the inventory items
-            CraftingHandler.FillLeftSlotsWithInventory();
+                //Fill the left slots with the inventory items
+                CraftingHandler.FillLeftSlotsWithInventory();
+            }
+            else if (IsPaused && CanCloseUI)
+            {
+                UpdateGamePause();
+                CraftingHandler.DestroyAndCreate(out PnlCrafting);
+            }
+
         }
-        else if (Input.GetKeyDown(KeyCode.Q) && IsPaused && CanCloseUI)
-        {
-            UpdateGamePause();
-            CraftingHandler.DestroyAndCreate(out PnlCrafting);
-        }
+        
         if (Input.GetKeyDown(KeyCode.R))
         {
             if (CraftingHandler.CheckRecipe())

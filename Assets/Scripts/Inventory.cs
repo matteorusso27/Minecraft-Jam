@@ -12,30 +12,27 @@ public class Inventory
     {
         storedBlocks = new Dictionary<InventoryItem, int>();
         
-        var allInventoryItem = Enumerable.Range(0, Enum.GetNames(typeof(InventoryItem)).Length).ToList();
-        
-        foreach (var i in allInventoryItem)
+        var allInventoryItem = Enum.GetValues(typeof(InventoryItem));
+
+        foreach (InventoryItem i in allInventoryItem)
         {
-            if (i == -1) continue;
-            storedBlocks.Add((InventoryItem)i, 5);
+            if (i == InventoryItem.None) continue;
+            storedBlocks.Add(i, 2);
         }
     }
 
-    public int GetQuantity(InventoryItem DropType) => storedBlocks.ContainsKey(DropType)? storedBlocks[DropType] : 0;
+    public int GetQuantity(InventoryItem item) => storedBlocks.ContainsKey(item) ? storedBlocks[item] : 0;
     public Dictionary<InventoryItem, int> GetStoredBlocks() => storedBlocks;
 
-    public void IncrementItem(InventoryItem DropType)
+    public void IncrementItem(InventoryItem item)
     {
-        storedBlocks[DropType] += 1;
+        storedBlocks[item] += 1;
     }
 
-    public void DecrementItem(InventoryItem DropType)
+    public void DecrementItem(InventoryItem item, int quantity = 1)
     {
-        storedBlocks[DropType] -= 1;
+        storedBlocks[item] -= quantity;
     }
-    
-    public void DecrementItem(InventoryItem DropType,int quantity)
-    {
-        storedBlocks[DropType] -= quantity;
-    }
+
+    public void RemoveItem(InventoryItem item) => storedBlocks.Remove(item);
 }
