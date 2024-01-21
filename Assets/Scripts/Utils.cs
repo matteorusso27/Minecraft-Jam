@@ -24,7 +24,8 @@ public static class Utils
         PickObjectManager,
         BigEnvironment,
         Environment,
-        GameStateHandler
+        GameStateHandler,
+        Raycaster
     }
 
     public enum InventoryItem

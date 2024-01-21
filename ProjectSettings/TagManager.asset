@@ -25,6 +25,7 @@ TagManager:
   - PickObjectManager
   - DamagePlayer
   - GameStateHandler
+  - Raycaster
   layers:
   - Default
   - TransparentFX

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Utils;
 
-public class UpdateLowBar : MonoBehaviour
+public class LowBar : MonoBehaviour
 {
     [SerializeField] GameObject[] slots;
     [SerializeField] GameObject[] highlights;

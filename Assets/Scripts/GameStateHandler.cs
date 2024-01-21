@@ -19,30 +19,38 @@ public class GameStateHandler : MonoBehaviour
     private bool CanCloseUI => currentState != GameState.ClosingUI;
 
     [SerializeField] private GameObject Instructions;
-    [SerializeField] public GameObject pnlCrafting;
+    [SerializeField] public GameObject PnlCrafting;
     [SerializeField] private CraftingHandler CraftingHandler;
+    [SerializeField] private Raycaster Raycaster;
 
     void Update()
+    {
+        UpdateUI();
+        UpdatePauseState();
+        UpdateRaycasting();
+    }
+
+    private void UpdateUI()
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
             Instructions.SetActive(!Instructions.activeInHierarchy);
         }
+    }
 
+    private void UpdatePauseState()
+    {
         if (Input.GetKeyDown(KeyCode.Q) && CanOpenUI)
         {
-            //Change game pause state
-            ChangePauseStatus();
+            UpdateGamePause();
 
             //Fill the left slots with the inventory items
             CraftingHandler.FillLeftSlotsWithInventory();
         }
         else if (Input.GetKeyDown(KeyCode.Q) && IsPaused && CanCloseUI)
         {
-            ChangePauseStatus();
-            GameObject pnlReference;
-            CraftingHandler.DestroyAndCreate(out pnlReference);
-            pnlCrafting = pnlReference;
+            UpdateGamePause();
+            CraftingHandler.DestroyAndCreate(out PnlCrafting);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -51,12 +59,25 @@ public class GameStateHandler : MonoBehaviour
         }
     }
 
-    //Game Pause Management
-    public void ChangePauseStatus()
+    private void UpdateRaycasting()
     {
-        UpdateGamePause();
-    }
+        bool isLeftClick = Input.GetMouseButtonDown(0);
+        bool isRightClick = Input.GetMouseButton(1);
 
+        if (!IsPaused)
+        {
+            if (isLeftClick)
+            {
+                Raycaster.CheckHit();
+            }
+            else if (isRightClick)
+            {
+                Raycaster.CheckDamage();
+            }
+            Raycaster.armAnimator.SetBool("isDestroying", isRightClick);
+        }
+        Raycaster.pike.SetActive(Raycaster.lowBarScript.IsHighlighted("Pike"));
+    }
     void UpdateGamePause()
     {
         if (currentState == GameState.Play)
@@ -69,7 +90,7 @@ public class GameStateHandler : MonoBehaviour
             //Reactivate time
             Time.timeScale = 1;
         }
-        pnlCrafting.SetActive(!pnlCrafting.activeInHierarchy);
+        PnlCrafting.SetActive(!PnlCrafting.activeInHierarchy);
 
         currentState = currentState == GameState.Play ? GameState.Pause : GameState.Play;
         FindGameObjectWithTag(Tags.Player).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!IsPaused);
@@ -78,13 +99,13 @@ public class GameStateHandler : MonoBehaviour
     private IEnumerator CloseUI()
     {
         currentState = GameState.ClosingUI;
-        pnlCrafting.GetComponent<Image>().raycastTarget = false;
+        PnlCrafting.GetComponent<Image>().raycastTarget = false;
         Time.timeScale = 1;
         yield return new WaitForSeconds(2f);
 
-        ChangePauseStatus();
+        UpdateGamePause();
         GameObject pnlReference;
         CraftingHandler.DestroyAndCreate(out pnlReference);
-        pnlCrafting = pnlReference;
+        PnlCrafting = pnlReference;
     }
 }

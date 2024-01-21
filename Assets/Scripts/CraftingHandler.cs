@@ -25,10 +25,7 @@ public class CraftingHandler : MonoBehaviour
     [SerializeField] private Texture2D uiTexture;
     [SerializeField] private Texture2D pikeTexture;
 
-    private bool isGrassActive;
-    private bool isWoodActive;
-    private bool isCobbleStoneActive;
-    private bool isCoalActive;
+    private List<InventoryItem> activeItems;
 
     private static List<InventoryItem> recipe1 = new List<InventoryItem> { InventoryItem.CobbleStone, InventoryItem.Wood, InventoryItem.Coal};
     private static int[] quantities1 = new int[] { 5,5,5 };
@@ -58,15 +55,11 @@ public class CraftingHandler : MonoBehaviour
         {
             left_slots[i] = FindGameObjectsWithTag(Tags.Left_Crafting_Slot)[i];
 
-            //right slots are less
+            //right slots are only 3
             if (i < 3)
                 right_slots[i] = FindGameObjectsWithTag(Tags.Right_Crafting_Slot)[i];
         }
-
-        isGrassActive = false;
-        isWoodActive = false;
-        isCobbleStoneActive = false;
-        isCoalActive = false;
+        activeItems = new List<InventoryItem>();
         pnlCrafting.SetActive(false);
     }
 
@@ -93,7 +86,7 @@ public class CraftingHandler : MonoBehaviour
         for (int i = 0; i < left_slots.Length; i++)
         {
             //Find the first slot empty
-            if (isSlotEmpty(left_slots[i]))
+            if (IsSlotEmpty(left_slots[i]))
             {
                 //Find the first non zero quantity element
                 foreach (KeyValuePair<InventoryItem, int> pair in inventory.GetStoredBlocks())
@@ -125,30 +118,30 @@ public class CraftingHandler : MonoBehaviour
         switch (text)
         {
             case InventoryItem.CobbleStone:
-                if (!isCobbleStoneActive)
+                if (!activeItems.Contains(InventoryItem.CobbleStone))
                 {
-                    isCobbleStoneActive = true;
+                    activeItems.Add(InventoryItem.CobbleStone);
                     return cobbleStoneTexture;
                 }
                 return null;
             case InventoryItem.Wood:
-                if (!isWoodActive)
+                if (!activeItems.Contains(InventoryItem.Wood))
                 {
-                    isWoodActive = true;
+                    activeItems.Add(InventoryItem.Wood);
                     return woodTexture;
                 }
                 return null;
             case InventoryItem.Grass:
-                if (!isGrassActive)
+                if (!activeItems.Contains(InventoryItem.Grass))
                 {
-                    isGrassActive = true;
+                    activeItems.Add(InventoryItem.Grass);
                     return grassTexture;
                 }
                 return null;
             case InventoryItem.Coal:
-                if (!isCoalActive)
+                if (!activeItems.Contains(InventoryItem.Coal))
                 {
-                    isCoalActive = true;
+                    activeItems.Add(InventoryItem.Coal);
                     return coalTexture;
                 }
                 return null;
@@ -157,7 +150,7 @@ public class CraftingHandler : MonoBehaviour
         }
     }
 
-    private bool isSlotEmpty(GameObject slot) => !slot.transform.GetChild(0).GetComponent<RawImage>().texture ? true : false;
+    private bool IsSlotEmpty(GameObject slot) => !slot.transform.GetChild(0).GetComponent<RawImage>().texture ? true : false;
     public bool CheckRecipe()
     {
         List<InventoryItem> input_recipe = new List<InventoryItem>();
@@ -223,6 +216,5 @@ public class CraftingHandler : MonoBehaviour
             inventory.DecrementItem(recipe[i],quantities1[i]);
         }
         return true;
-        
     }
 }

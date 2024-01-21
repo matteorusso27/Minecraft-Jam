@@ -11,7 +11,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField]
     float minDistanceHit = 1f;
 
-    private UpdateLowBar lowBarScript;
+    public LowBar lowBarScript;
     [SerializeField] private CraftingHandler craftingHandler;
     [SerializeField] public GameStateHandler gameStateHandler;
 
@@ -20,9 +20,9 @@ public class Raycaster : MonoBehaviour
     [SerializeField] GameObject woodPrefab;
     [SerializeField] GameObject coalPrefab;
 
-    [SerializeField] GameObject pike;
+    [SerializeField] public GameObject pike;
 
-    private Animator armAnimator;
+    public Animator armAnimator;
     public bool isGamePaused => gameStateHandler.IsPaused;
     private bool isPikeActive => pike.activeInHierarchy;
 
@@ -31,46 +31,11 @@ public class Raycaster : MonoBehaviour
     private float pikeDamage = 130f;
     private void Start()
     {
-        lowBarScript = FindGameObjectWithTag(Tags.LowBar).GetComponent<UpdateLowBar>();
+        lowBarScript = FindGameObjectWithTag(Tags.LowBar).GetComponent<LowBar>();
         FindGameObjectWithTag(Tags.Player).GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().mouseLook.SetCursorLock(!isGamePaused);
         armAnimator = GameObject.Find("Arm").GetComponent<Animator>();
     }
 
-    private void Update()
-    {
-        bool isLeftClick = Input.GetMouseButtonDown(0);
-        bool isRightClick = Input.GetMouseButton(1);
-        
-        //Right click to create
-        if (!isGamePaused)
-        {
-            if (isLeftClick)
-            {
-                CheckHit();
-            }
-            else if (isRightClick)
-            {
-                CheckDamage();
-            }
-            else
-            {
-                armAnimator.SetBool("isDestroying", false);
-            }
-        }
-            
-        if (isPikeActive)
-        {
-            damagePerSecond = pikeDamage;
-        }
-        else
-        {
-            damagePerSecond = handDamage;
-        }
-
-        pike.SetActive(lowBarScript.IsHighlighted("pike"));
-    }
-
-    
     private void CastRay(out RaycastHit hit)
     {
         Ray lastRay = cam.ScreenPointToRay(new Vector3(x, y));
@@ -80,10 +45,9 @@ public class Raycaster : MonoBehaviour
         }   
     }
 
-    private void CheckHit()
+    public void CheckHit()
     {
-        RaycastHit hit;
-        CastRay(out hit);
+        CastRay(out RaycastHit hit);
         //Possibility to create blocks at certain distance
 
         if (hit.distance > minDistanceHit && hit.collider.gameObject.CompareTag(Tags.Block.ToString()))
@@ -128,10 +92,11 @@ public class Raycaster : MonoBehaviour
         if(isPikeActive) enemyObj.GetComponent<EnemyScript>().TakeDamage(damagePerSecond);
     }
     
-    private void CheckDamage()
+    public void CheckDamage()
     {
-        RaycastHit hit;
-        CastRay(out hit);
+        damagePerSecond = isPikeActive ? pikeDamage : handDamage;
+
+        CastRay(out RaycastHit hit);
         if (hit.collider != null)
         {
             if (hit.collider.gameObject.CompareTag(Tags.Block.ToString()))
@@ -143,7 +108,6 @@ public class Raycaster : MonoBehaviour
             {
                 DamageEnemy(hit.collider.gameObject);
             }
-            armAnimator.SetBool("isDestroying", true);
         }
     }
     private void prefabToBuild(out GameObject gObject)
