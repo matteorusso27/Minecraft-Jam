@@ -13,6 +13,8 @@ public class LowBar : MonoBehaviour
     Inventory inventory;
     private int currentHighlightIndex = 0;
 
+    private GameStateHandler GameStateHandler;
+    
     //Textures
     [SerializeField] private Texture2D grassTexture;
     [SerializeField] private Texture2D cobbleStoneTexture;
@@ -29,6 +31,7 @@ public class LowBar : MonoBehaviour
 
     private void Start()
     {
+        GameStateHandler = FindGameObjectWithTag(Tags.GameStateHandler).GetComponent<GameStateHandler>();
         inventory = FindGameObjectWithTag(Tags.Player).GetComponent<CollectorScript>().inventory;
         slots = new GameObject[dimension];
         highlights = new GameObject[dimension];
@@ -55,6 +58,7 @@ public class LowBar : MonoBehaviour
 
     private void ChangeHighlight()
     {
+        if (GameStateHandler.IsPaused) return;
 
         if (currentHighlightIndex + 1 >= slots.Length)
         {
